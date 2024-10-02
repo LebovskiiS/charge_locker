@@ -13,7 +13,7 @@ sessions_db = (
     'ID INTEGER PRIMARY KEY AUTOINCREMENT, '
     'start INTEGER NOT NULL, '
     'end INTEGER DEFAULT 0, '
-    'status BOOLEAN)'
+    'status BOOLEAN, cookies TEXT DEFAULT 0 )'
 )
 
 spots_db = (
@@ -22,10 +22,10 @@ spots_db = (
     'floor INTEGER NOT NULL, '  
     'building INTEGER DEFAULT NULL, '
     'spot_number INTEGER NOT NULL, '
-    'is_available BOOLEAN)'
+    'is_available INTEGER DEFAULT 1)'
 )
 
 
 
-show_avaliable_spots = ('SELECT * FROM spots WHERE is_available = 1')
+show_available_spots = ('SELECT * FROM spots WHERE is_available = 1')
 
