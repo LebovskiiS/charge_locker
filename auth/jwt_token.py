@@ -4,7 +4,7 @@ from config import SECRET_KEY
 
 
 def create_token():
-    payload = {'datetime': datetime.datetime.now().isoformat()}
+    payload = {'datetime': hash(datetime.datetime.now().isoformat())}
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
     return token
 

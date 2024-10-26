@@ -29,7 +29,11 @@
                     <td>{{ spot.building }}</td>
                     <td>{{ spot.spot_number }}</td>
                     <td>{{ 'Yes' if spot.is_available else 'No' }}</td>
-                    <td><a href="/book_spot?spot_id={{ spot.ID }}" class="btn btn-primary">Book It Now</a></td>
+                    <td>
+                        <a class="btn btn-primary" href="/book/{{spot.ID}}">
+                            book spot
+                        </a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

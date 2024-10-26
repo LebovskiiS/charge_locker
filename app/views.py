@@ -1,22 +1,22 @@
-from .controllers import main_controller, get_available_spots_controller
-from flask import request, render_template, redirect, jsonify
+from .controllers import main_controller, submit_controller, get_session_by_token_controller,get_spot_info_by_id_controller
+from flask import request, render_template, redirect
 from . import db
-from datetime import datetime, timedelta
-from auth.jwt_token import decode_token
+from auth.jwt_token import create_token
 
-from config import TEMPLATES_PATH
+
 def main_view():
-    if db.get_session_by_cookies(request.cookies.get('jwt')):
+    session_token = get_session_by_token_controller(request.cookies.get('jwt'))
+    if session_token:
         session = main_controller(request.cookies.get('jwt'))
-        session_info =  [{'id':session['id'], 'start':session['start'],
-                  'end':session['end'], 'status':session['status']}]
-        return render_template('/session_info.html', session_info= session_info)
+        session_info =  {'id':session[0], 'start':session[1],
+                  'end':session[2], 'status':session[3]}
+        return render_template('session_info.html', session_info= session_info)
     else:
         return redirect('/spots')
 
 
 def get_spots_view():
-    spots = get_available_spots_controller()
+    spots = db.get_available_spots()
     if spots:
         return render_template('available_spots.html', spots= spots)
     else:
@@ -24,39 +24,31 @@ def get_spots_view():
 
 
 
-def book_time_view():
-    token = request.cookies.get('jwt')
+def book_time_view(spot_id):
+    spot_data = get_spot_info_by_id_controller(spot_id)
+    building = spot_data[1]
+    floor = spot_data[2]
+    spot_number = spot_data[3]
+    return render_template('book_time.html',
+                           building= building, spot_number= spot_number, floor = floor)
 
-    if not token:
-        return jsonify({'error': 'Токен отсутствует!'}), 401
 
-    # Декодируем токен и получаем данные пользователя
-    try:
-        decoded_token = decode_token(token)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 401
-
-    spot_id = request.args.get('spot_id')
-    booked_time = request.form['time']
-    end_time = datetime.now() + timedelta(hours=int(booked_time))
-
-    try:
-        db.book_spot_with_time(spot_id, end_time)
-        return jsonify({'message': f'Место {spot_id} успешно забронировано до {end_time}'}), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 400
 
 
 def submit_view():
-    token = request.cookies.get('jwt')
-    if not token:
-        return jsonify({'error': 'Токен отсутствует!'}), 401
+    token = create_token()
+    spot_id = request.args.get('spot_id')
+    start = request.args.get('time_start')
+    end = request.args.get('time_end')
+    try:
+        submit_controller(token, spot_id, start, end)
+        resp = redirect('/')
+        resp.set_cookie(key='jwt', value=token, max_age=60 * 60 * 16)
+        return resp
+    except Exception as e:
+        return {'error': f'something went wrong: {e}'}
 
-    spot_id = request.form.get('spot_id')
-    booked_time = request.form.get('time')
 
-    if spot_id and booked_time:
-        response = book_time_view()
-        return response
-    else:
-        return jsonify({'error': 'ID места и время обязательны!'}), 400
+
+
+
