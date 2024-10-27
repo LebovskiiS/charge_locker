@@ -2,17 +2,15 @@ from .controllers import main_controller, submit_controller, get_session_by_toke
 from flask import request, render_template, redirect
 from . import db
 from auth.jwt_token import create_token
+from .decorators import check_token, is_the_spot_available
 
 
+@check_token
 def main_view():
-    session_token = get_session_by_token_controller(request.cookies.get('jwt'))
-    if session_token:
-        session = main_controller(request.cookies.get('jwt'))
-        session_info =  {'id':session[0], 'start':session[1],
-                  'end':session[2], 'status':session[3]}
-        return render_template('session_info.html', session_info= session_info)
-    else:
-        return redirect('/spots')
+    session = main_controller(request.cookies.get('jwt'))
+    session_info =  {'id':session[0], 'start':session[1],
+                'end':session[2], 'status':session[3]}
+    return render_template('session_info.html', session_info= session_info)
 
 
 def get_spots_view():
@@ -23,18 +21,18 @@ def get_spots_view():
         return render_template('no_available_spots.html')
 
 
-
-def book_time_view(spot_id):
+@is_the_spot_available
+def choose_time_view(spot_id):
     spot_data = get_spot_info_by_id_controller(spot_id)
     building = spot_data[1]
     floor = spot_data[2]
     spot_number = spot_data[3]
-    return render_template('book_time.html',
+    return render_template('choose_time.html',
                            building= building, spot_number= spot_number, floor = floor)
 
 
 
-
+@is_the_spot_available
 def submit_view():
     token = create_token()
     spot_id = request.args.get('spot_id')

@@ -3,11 +3,10 @@ from app import app, db
 
 
 
-class BookSpotTestCase(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        app.config['TESTING'] = True
-        cls.client = app.test_client()
-        cls.db = db
+# class BookSpotTestCase(TestCase):
+#     @classmethod
+#     def setUpClass(cls):
+#         app.config['TESTING'] = True
+#         cls.client = app.test_client()
+#         cls.db = db
 
-    def

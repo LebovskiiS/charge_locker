@@ -18,3 +18,7 @@ def get_session_by_token_controller(token):
 
 def get_spot_info_by_id_controller(spot_id):
         return db.get_spot_info_by_id(spot_id)
+
+
+def is_available_controller(spot_id):
+        return db.is_available(spot_id)
