@@ -6,10 +6,25 @@
     <title>Select Time</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+        h1 {
+            margin-bottom: 40px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .btn-success {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center text-light">Select Time for Spot {{ spot_number }} in {{ building }} on Floor {{ floor }}</h1>
+        <h1 class="text-center">Select Time for Spot {{ spot_number }}, Building {{ building }}, Floor {{ floor }}</h1>
         <form id="booking-form" method="post" action="/submit">
             <input type="hidden" name="spot_id" value="{{ spot_id }}">
             <input type="hidden" name="floor" value="{{ floor }}">
@@ -17,16 +32,16 @@
             <input type="hidden" name="spot_number" value="{{ spot_number }}">
 
             <div class="form-group">
-                <label for="time_start" class="text-light">Start Time:</label>
+                <label for="time_start">Start Time:</label>
                 <input type="text" id="time_start" name="time_start" class="form-control" required>
             </div>
 
             <div class="form-group">
-                <label for="time_end" class="text-light">End Time:</label>
+                <label for="time_end">End Time:</label>
                 <select id="time_end" name="time_end" class="form-control" required></select>
             </div>
 
-            <button type="submit" class="btn btn-success">Confirm Booking</button>
+            <button type="submit" class="btn btn-success btn-block">Confirm Booking</button>
         </form>
     </div>
 
@@ -63,7 +78,7 @@
                 startHour = 0;
             }
 
-            for (var i = 1; i <= 60; i++) { // 60 шагов по 15 минут за 15 часов
+            for (var i = 1; i <= 12; i++) { // 12 шагов по 15 минут
                 startMinute += 15;
                 if (startMinute >= 60) {
                     startHour += 1;
@@ -77,10 +92,11 @@
                 var displayHour = startHour % 12 || 12;
                 var displayMinute = String(startMinute).padStart(2, '0');
                 var displayTime = `${displayHour}:${displayMinute} ${displayPeriod}`;
+                var display = `${displayTime} (+${i * 15} minutes)`;
 
                 var option = document.createElement('option');
                 option.value = displayTime; // Сохраняем значение в 12-часовом формате
-                option.textContent = displayTime;
+                option.textContent = display;
                 timeEndSelect.appendChild(option);
             }
         }

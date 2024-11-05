@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extend Booking</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .info-card {
+            margin-top: 2rem;
+            background-color: #343a40;
+        }
+        .info-card .card-title, .info-card .card-text, label, .btn {
+            color: #ffffff;
+        }
+        .info-card .card-title {
+            font-size: 1.75rem;
+        }
+        .info-card .card-text {
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center text-light">Extend Booking for Spot {{ spot_number }}</h1>
+        <div class="card info-card border-light">
+            <div class="card-body">
+                <h5 class="card-title">Spot Information</h5>
+                <p class="card-text"><strong>Floor:</strong> {{ floor }}</p>
+                <p class="card-text"><strong>Building:</strong> {{ building }}</p>
+                <p class="card-text"><strong>Spot Number:</strong> {{ spot_number }}</p>
+                <p class="card-text"><strong>Current Start Time:</strong> {{ start }}</p>
+                <p class="card-text"><strong>Current End Time:</strong> {{ end }}</p>
+            </div>
+        </div>
+
+        <form id="extend-booking-form" method="post" action="/extend/submit" class="mt-4">
+            <input type="hidden" name="spot_number" value="{{ spot_number }}">
+            <input type="hidden" name="floor" value="{{ floor }}">
+            <input type="hidden" name="building" value="{{ building }}">
+            <input type="hidden" name="current_end_time" value="{{ end }}">
+
+            <div class="form-group">
+                <label for="new_end_time" class="text-light">New End Time:</label>
+                <select id="new_end_time" name="new_end_time" class="form-control" required></select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Extend Booking</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var endTimeStr = "{{ end }}";
+            var endTime = parseTimeString(endTimeStr);
+            var newEndTimeSelect = document.getElementById('new_end_time');
+
+            var maxExtensionTime = 3 * 60 * 60 * 1000; // 3 часа в миллисекундах
+            var step = 15 * 60 * 1000; // шаг 15 минут в миллисекундах
+
+            for (var i = step; i <= maxExtensionTime; i += step) {
+                var newEndTime = new Date(endTime.getTime() + i);
+                var hours = newEndTime.getHours();
+                var minutes = newEndTime.getMinutes();
+                var period = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12; // Переводим в 12-часовой формат
+                var displayTime = `${hours}:${String(minutes).padStart(2, '0')} ${period}`;
+
+                var option = document.createElement('option');
+                option.value = displayTime;
+                option.textContent = displayTime;
+                newEndTimeSelect.appendChild(option);
+            }
+
+            function parseTimeString(timeStr) {
+                var [time, period] = timeStr.split(' ');
+                var [hours, minutes] = time.split(':').map(Number);
+                if (period === 'PM' && hours !== 12) hours += 12;
+                if (period === 'AM' && hours === 12) hours = 0;
+                var date = new Date();
+                date.setHours(hours, minutes, 0, 0);
+                return date;
+            }
+        });
+    </script>
+</body>
+</html>

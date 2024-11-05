@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import request, render_template, redirect
 from .controllers import (
     main_controller, submit_controller,
-    get_session_by_token_controller, get_spot_info_by_id_controller, get_spot_info_by_token_controller)
+    get_session_by_token_controller, get_spot_info_by_id_controller, get_spot_info_by_token_controller, stop_booking_controller)
 from . import db
 from auth.jwt_token import create_token
 from .decorators import check_token
@@ -95,3 +95,23 @@ def session_view():
         'session_info.html', start=start, end=end, floor=floor,
         building=building, spot_number=spot_number
     )
+
+
+@check_token
+def stop_booking_view():
+    stop_booking_controller(request.cookies.get('jwt'))
+    return redirect('/')
+
+# @check_token
+# def extend_time_view():
+#     session = get_session_by_token_controller(request.cookies.get('jwt'))
+#     spot = get_spot_info_by_token_controller(request.cookies.get('jwt'))
+#     floor = spot[1]
+#     building = spot[2]
+#     spot_number = spot[3]
+#     start = session[1]
+#     end = session[2]
+#     return render_template('extend_booking.html', floor= floor, building= building, spot_number= spot_number,
+#                            start= start, end= end)
+#
+

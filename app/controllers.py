@@ -27,3 +27,12 @@ def is_available_controller(spot_id):
 
 def get_spot_info_by_token_controller(token):
         return db.get_spot_info_by_token(token)
+
+def  stop_booking_controller(token):
+        db. stop_booking(token)
+        return 'ok'
+
+
+
+# def extend_booking_controller(token):
+#         db.extend_booking()

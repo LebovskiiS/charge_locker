@@ -6,15 +6,18 @@ from config import WORK_DIRECTORY
 class Database:
     _instance = None
 
+
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super(Database, cls).__new__(cls, *args, **kwargs)
         return cls._instance
-    
+
+
     def __init__(self):
         self.connection = sqlite3.connect(WORK_DIRECTORY +'/charger_locker_database.db', check_same_thread=False)
         self.cursor = self.connection.cursor()
         self.create_tables()
+
 
     def create_tables(self):
         self.cursor.execute(spots_db)
@@ -23,6 +26,7 @@ class Database:
         self.cursor.execute('INSERT INTO spots (floor, building, spot_number, is_available) VALUES '
                             '(1, 3, 13, 1)')
         self.connection.commit()
+
 
     def get_available_spots(self):
         available_spots = self.cursor.execute(show_available_spots).fetchall()
@@ -37,12 +41,14 @@ class Database:
             })
         return spots_to_return
 
+
     def is_available(self, spot_id):
         self.cursor.execute('SELECT is_available FROM spots WHERE ID = ?', (spot_id,))
         data = self.cursor.fetchone()
         if data and data[0]:
             return True
         return False
+
 
     def get_spot_id(self, floor, building, spot_number):
         spot_id = self.cursor.execute('SELECT ID FROM spots WHERE floor=? AND building=? AND spot_number=?',
@@ -58,7 +64,6 @@ class Database:
             'VALUES (?, ?, ?, ?)', (start, end, token, spot_id))
         self.connection.commit()
         return self.cursor.lastrowid
-
 
 
     def return_token_if_exists(self, token):
@@ -82,9 +87,18 @@ class Database:
         return spot_id
 
 
-    def delete_session_by_token(self, token):
+    def stop_booking(self, token):
         self.cursor.execute('DELETE FROM sessions WHERE token = ?', (token,))
         self.connection.commit()
+        self.cursor.execute(
+            '''
+            UPDATE spots
+            SET is_available = 0
+            FROM sessions
+            WHERE sessions.token = ? AND sessions.spot_id = spots.id
+            ''',
+            [token]
+        )
         return 'ok'
 
 
@@ -101,3 +115,9 @@ class Database:
             'SELECT * FROM spots JOIN sessions ON spots.id = sessions.spot_id WHERE token = ?',
             [token])
         return self.cursor.fetchone()
+
+
+
+
+
+    # def extend_session(self, token,time):
