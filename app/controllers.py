@@ -1,8 +1,9 @@
 from . import db
 
 def main_controller(token):
-        data = db.get_session_by_token(token)
-        return data
+        session_info = db.get_session_by_token(token)
+        spot_info = db.get_spot_info_by_token(token)
+        return [*session_info, *spot_info]
 
 def get_available_spots_controller():
         return db.get_available_spots()
@@ -22,3 +23,7 @@ def get_spot_info_by_id_controller(spot_id):
 
 def is_available_controller(spot_id):
         return db.is_available(spot_id)
+
+
+def get_spot_info_by_token_controller(token):
+        return db.get_spot_info_by_token(token)

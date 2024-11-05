@@ -49,17 +49,17 @@ class Database:
                                       (floor, building, spot_number)).fetchone()
         return spot_id
 
+
     def book_spot(self, token, spot_id, start, end):
-        if self.is_available(spot_id):
-            self.cursor.execute('UPDATE spots SET is_available = 0 WHERE ID = ?', (spot_id,))
-            self.connection.commit()
-            self.cursor.execute(
-                'INSERT INTO sessions (start, end, token, spot_id) '
-                'VALUES (?, ?, ?, ?)', (start, end, token, spot_id))
-            self.connection.commit()
-            return 'ok'
-        else:
-            raise Exception(f"Место {spot_id} недоступно для бронирования.")
+        self.cursor.execute('UPDATE spots SET is_available = 0 WHERE ID = ?', (spot_id,))
+        self.connection.commit()
+        self.cursor.execute(
+            'INSERT INTO sessions (start, end, token, spot_id) '
+            'VALUES (?, ?, ?, ?)', (start, end, token, spot_id))
+        self.connection.commit()
+        return self.cursor.lastrowid
+
+
 
     def return_token_if_exists(self, token):
         data = self.cursor.execute('SELECT token FROM sessions WHERE token = ?', (token,))
@@ -73,6 +73,7 @@ class Database:
         end_time = self.cursor.execute('SELECT end FROM sessions WHERE cookies = ?', (token,))
         return end_time
 
+
     def add_new_spots(self, floor, building, spot_number):
         self.cursor.execute('INSERT INTO spots (floor, building, spot_number) VALUES (?, ?, ?)',
                             (floor, building, spot_number))
@@ -80,10 +81,12 @@ class Database:
         spot_id = self.cursor.lastrowid
         return spot_id
 
+
     def delete_session_by_token(self, token):
         self.cursor.execute('DELETE FROM sessions WHERE token = ?', (token,))
         self.connection.commit()
         return 'ok'
+
 
     def get_session_by_token(self, token):
         self.cursor.execute('SELECT * FROM sessions WHERE token = ?', [token])
@@ -91,4 +94,10 @@ class Database:
 
     def get_spot_info_by_id(self, spot_id):
         self.cursor.execute('SELECT * FROM spots WHERE id = ?', [spot_id])
+        return self.cursor.fetchone()
+
+    def get_spot_info_by_token(self, token):
+        self.cursor.execute(
+            'SELECT * FROM spots JOIN sessions ON spots.id = sessions.spot_id WHERE token = ?',
+            [token])
         return self.cursor.fetchone()

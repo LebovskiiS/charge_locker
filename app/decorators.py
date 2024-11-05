@@ -1,19 +1,20 @@
 from werkzeug.utils import redirect
 from flask import Flask, request
-
+from functools import wraps
 from .controllers import get_session_by_token_controller, is_available_controller
 
 
+
 def check_token(func):
-    def wrapped(*args):
+    @wraps(func)
+    def wrapped(*args, **kwargs):
         token = request.cookies.get('jwt')
         if get_session_by_token_controller(token):
-            return func(*args)
+            return func(*args, **kwargs)
         else:
             return redirect('/spots')
 
     return wrapped
-
 
 
 def is_the_spot_available(func):
