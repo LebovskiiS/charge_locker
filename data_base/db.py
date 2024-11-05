@@ -20,9 +20,9 @@ class Database:
         self.cursor.execute(spots_db)
         self.cursor.execute(sessions_db)
         self.connection.commit()
-        # self.cursor.execute('INSERT INTO spots (floor, building, spot_number, is_available) VALUES '
-        #                     '(1, 3, 13, 1)')
-        # self.connection.commit()
+        self.cursor.execute('INSERT INTO spots (floor, building, spot_number, is_available) VALUES '
+                            '(1, 3, 13, 1)')
+        self.connection.commit()
 
     def get_available_spots(self):
         available_spots = self.cursor.execute(show_available_spots).fetchall()

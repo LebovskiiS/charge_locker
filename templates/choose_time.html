@@ -15,9 +15,10 @@
             <input type="hidden" name="floor" value="{{ floor }}">
             <input type="hidden" name="building" value="{{ building }}">
             <input type="hidden" name="spot_number" value="{{ spot_number }}">
+
             <div class="form-group">
                 <label for="time_start" class="text-light">Start Time:</label>
-                <input type="time" id="time_start" name="time_start" class="form-control" required>
+                <input type="text" id="time_start" name="time_start" class="form-control" required>
             </div>
 
             <div class="form-group">
@@ -28,14 +29,17 @@
             <button type="submit" class="btn btn-success">Confirm Booking</button>
         </form>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var now = new Date();
-            var hours = String(now.getHours()).padStart(2, '0');
-            var minutes = String(now.getMinutes()).padStart(2, '0');
-            var currentTime = hours + ':' + minutes;
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var period = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12; // Convert to 12-hour format
+            var currentTime = `${hours}:${String(minutes).padStart(2, '0')} ${period}`;
             document.getElementById('time_start').value = currentTime;
 
             generateEndTimeOptions();
@@ -50,9 +54,14 @@
 
             if (!timeStart) return;
 
-            var startParts = timeStart.split(':');
-            var startHour = parseInt(startParts[0], 10);
-            var startMinute = parseInt(startParts[1], 10);
+            var [time, period] = timeStart.split(' ');
+            var [startHour, startMinute] = time.split(':').map(Number);
+
+            if (period === 'PM' && startHour !== 12) {
+                startHour += 12;
+            } else if (period === 'AM' && startHour === 12) {
+                startHour = 0;
+            }
 
             for (var i = 1; i <= 60; i++) { // 60 шагов по 15 минут за 15 часов
                 startMinute += 15;
@@ -64,22 +73,16 @@
                     startHour -= 24;
                 }
 
-                var period = startHour >= 12 ? 'PM' : 'AM';
+                var displayPeriod = startHour >= 12 ? 'PM' : 'AM';
                 var displayHour = startHour % 12 || 12;
                 var displayMinute = String(startMinute).padStart(2, '0');
-                var displayTime = `${displayHour}:${displayMinute} ${period}`;
+                var displayTime = `${displayHour}:${displayMinute} ${displayPeriod}`;
 
                 var option = document.createElement('option');
-                option.value = `${displayHour}:${displayMinute} ${period}`;
+                option.value = displayTime; // Сохраняем значение в 12-часовом формате
                 option.textContent = displayTime;
                 timeEndSelect.appendChild(option);
             }
-        }
-
-        function submitForm() {
-            var form = document.getElementById('booking-form');
-            var params = new URLSearchParams(new FormData(form)).toString();
-            window.location.href = "/submit?" + params;
         }
     </script>
 </body>
