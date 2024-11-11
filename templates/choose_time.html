@@ -20,6 +20,14 @@
         .btn-success {
             margin-top: 20px;
         }
+        .option-tooltip-time {
+            display: inline-block;
+        }
+        .option-tooltip-plus {
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.7);
+            float: right;
+        }
     </style>
 </head>
 <body>
@@ -78,7 +86,8 @@
                 startHour = 0;
             }
 
-            for (var i = 1; i <= 12; i++) { // 12 шагов по 15 минут
+            var optionElements = [];
+            for (var i = 1; i <= 48; i++) { // 48 шагов по 15 минут (12 часов)
                 startMinute += 15;
                 if (startMinute >= 60) {
                     startHour += 1;
@@ -92,13 +101,18 @@
                 var displayHour = startHour % 12 || 12;
                 var displayMinute = String(startMinute).padStart(2, '0');
                 var displayTime = `${displayHour}:${displayMinute} ${displayPeriod}`;
-                var display = `${displayTime} (+${i * 15} minutes)`;
+                var minutesToAdd = i * 15;
+                var tooltipText = minutesToAdd >= 60
+                    ? `+${Math.floor(minutesToAdd / 60)}hr ${minutesToAdd % 60}min`
+                    : `+${minutesToAdd}min`;
 
                 var option = document.createElement('option');
                 option.value = displayTime; // Сохраняем значение в 12-часовом формате
-                option.textContent = display;
-                timeEndSelect.appendChild(option);
+                option.innerHTML = `<span class="option-tooltip-time">${displayTime}</span><span class="option-tooltip-plus">${tooltipText}</span>`;
+                optionElements.push(option);
             }
+
+            optionElements.forEach(option => timeEndSelect.appendChild(option));
         }
     </script>
 </body>

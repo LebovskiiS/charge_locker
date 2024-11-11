@@ -1,6 +1,7 @@
 import sqlite3
 from .scripts import sessions_db, spots_db, show_available_spots
 from config import WORK_DIRECTORY
+from datetime import datetime
 
 
 class Database:
@@ -19,13 +20,15 @@ class Database:
         self.create_tables()
 
 
+
     def create_tables(self):
         self.cursor.execute(spots_db)
         self.cursor.execute(sessions_db)
         self.connection.commit()
         self.cursor.execute('INSERT INTO spots (floor, building, spot_number, is_available) VALUES '
-                            '(1, 3, 13, 1)')
+                            '(1, 2, 99, 1)')
         self.connection.commit()
+
 
 
     def get_available_spots(self):
@@ -42,6 +45,7 @@ class Database:
         return spots_to_return
 
 
+
     def is_available(self, spot_id):
         self.cursor.execute('SELECT is_available FROM spots WHERE ID = ?', (spot_id,))
         data = self.cursor.fetchone()
@@ -50,10 +54,12 @@ class Database:
         return False
 
 
+
     def get_spot_id(self, floor, building, spot_number):
         spot_id = self.cursor.execute('SELECT ID FROM spots WHERE floor=? AND building=? AND spot_number=?',
                                       (floor, building, spot_number)).fetchone()
         return spot_id
+
 
 
     def book_spot(self, token, spot_id, start, end):
@@ -66,6 +72,7 @@ class Database:
         return self.cursor.lastrowid
 
 
+
     def return_token_if_exists(self, token):
         data = self.cursor.execute('SELECT token FROM sessions WHERE token = ?', (token,))
         cookies = data.fetchone()
@@ -74,9 +81,12 @@ class Database:
         else:
             return False
 
+
+
     def show_end_time(self, token):
         end_time = self.cursor.execute('SELECT end FROM sessions WHERE cookies = ?', (token,))
         return end_time
+
 
 
     def add_new_spots(self, floor, building, spot_number):
@@ -85,6 +95,7 @@ class Database:
         self.connection.commit()
         spot_id = self.cursor.lastrowid
         return spot_id
+
 
 
     def stop_booking(self, token):
@@ -102,6 +113,7 @@ class Database:
         return 'ok'
 
 
+
     def get_session_by_token(self, token):
         self.cursor.execute('SELECT * FROM sessions WHERE token = ?', [token])
         return self.cursor.fetchone()
@@ -116,8 +128,29 @@ class Database:
             [token])
         return self.cursor.fetchone()
 
+    def delete_old_sessions(self):
+        self.connection.execute('BEGIN;')
 
+        try:
+            self.cursor.execute(
+                """
+                DELETE FROM sessions
+                WHERE (end IS NOT NULL AND end < strftime('%s', 'now')) OR end IS NULL;
+                """
+            )
+            self.cursor.execute(
+                """
+                UPDATE spots
+                SET is_available = 1
+                WHERE ID IN (
+                    SELECT spot_id
+                    FROM sessions
+                    WHERE (end IS NOT NULL AND end < strftime('%s', 'now')) OR end IS NULL
+                );
+                """
+            )
+            self.connection.commit()
 
-
-
-    # def extend_session(self, token,time):
+        except sqlite3.Error as e:
+            self.connection.rollback()
+            print(f"An error occurred: {e}")

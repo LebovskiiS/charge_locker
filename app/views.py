@@ -5,46 +5,51 @@ from .controllers import (
     get_session_by_token_controller, get_spot_info_by_id_controller, get_spot_info_by_token_controller, stop_booking_controller)
 from . import db
 from auth.jwt_token import create_token
-from .decorators import check_token
+from .decorators import check_token, delete_old_sessions
+from app.logs import loger
 
 
-# Преобразование даты и времени для хранения в БД в 12-часовом формате с AM/PM
 def time_to_db_format(date_str, time_str):
     datetime_obj = datetime.strptime(f"{date_str} {time_str}", '%Y-%m-%d %I:%M %p')
     return datetime_obj.strftime('%Y-%m-%d %I:%M %p')
 
 
-# Форматирование времени обратно из БД в 12-часовой формат с AM/PM
+
 def full_time_to_12_hour_format(datetime_str):
     datetime_obj = datetime.strptime(datetime_str, '%Y-%m-%d %I:%M %p')
     return datetime_obj.strftime('%I:%M %p')
 
 
+@delete_old_sessions
 @check_token
 def main_view():
+    loger.debug('main func started with token')
     session = main_controller(request.cookies.get('jwt'))
     spot_id = session[1]
-    start = session[2]  # Время уже в строковом формате
-    end = session[3]  # Время уже в строковом формате
+    start = session[2]
+    end = session[3]
     floor = session[7]
-    building = session[8]
-    spot_number = session[9]
-
+    building = session[9]
+    spot_number = session[6]
+    loger.warning('main rendering session_info.html')
     return render_template(
         'session_info.html', spot_id=spot_id, start=start, end=end,
         floor=floor, building=building, spot_number=spot_number
     )
 
 
+
 def get_spots_view():
     spots = db.get_available_spots()
     if spots:
+        loger.debug('returned ava')
         return render_template('available_spots.html', spots=spots)
     else:
         return render_template('no_available_spots.html')
 
 
-# @is_the_spot_available
+
+
 def choose_time_view(spot_id):
     spot_data = get_spot_info_by_id_controller(spot_id)
     building = spot_data[1]
@@ -56,7 +61,7 @@ def choose_time_view(spot_id):
     )
 
 
-# @is_the_spot_available
+@delete_old_sessions
 def submit_view():
     token = create_token()
     spot_id = request.form.get('spot_id')
@@ -88,12 +93,12 @@ def session_view():
     floor = spot_info[1]
     building = spot_info[2]
     spot_number = spot_info[3]
-    start = session_info[2]  # Время уже в строковом формате
-    end = session_info[3]  # Время уже в строковом формате
+    start = session_info[2]
+    end = session_info[3]
 
     return render_template(
         'session_info.html', start=start, end=end, floor=floor,
-        building=building, spot_number=spot_number
+        building= building, spot_number= spot_number
     )
 
 
