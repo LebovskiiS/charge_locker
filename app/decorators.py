@@ -39,9 +39,7 @@ def is_the_spot_available(func):
 def delete_old_sessions(func):
     @wraps(func)
     def wrapped():
-        current_hour = datetime.now().hour
-        if current_hour % 2 == 0:
-            db.delete_old_sessions()
+        db.delete_old_sessions()
         return func()
 
     return wrapped

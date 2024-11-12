@@ -1,7 +1,7 @@
 import sqlite3
 from .scripts import sessions_db, spots_db, show_available_spots
 from config import WORK_DIRECTORY
-from datetime import datetime
+
 
 
 class Database:
@@ -18,16 +18,43 @@ class Database:
         self.connection = sqlite3.connect(WORK_DIRECTORY +'/charger_locker_database.db', check_same_thread=False)
         self.cursor = self.connection.cursor()
         self.create_tables()
-
-
+        self.connection.commit()
+        # self.add_new_spots(1, 1, 1)
+        # self.add_new_spots(1, 1, 2)
+        # self.add_new_spots(1, 1, 3)
+        # self.add_new_spots(2, 1, 1)
+        # self.add_new_spots(2, 1, 2)
+        # self.add_new_spots(2, 1, 3)
+        # self.add_new_spots(2, 1, 4)
+        # self.add_new_spots(3, 1, 1)
+        # self.add_new_spots(3, 1, 2)
+        # self.add_new_spots(3, 1, 3)
+        # self.add_new_spots(3, 1, 4)
+        # self.add_new_spots(4, 1, 1)
+        # self.add_new_spots(4, 1, 2)
+        # self.add_new_spots(4, 1, 3)
+        # self.add_new_spots(4, 1, 4)
+        # self.add_new_spots(5, 1, 1)
+        # self.add_new_spots(5, 1, 2)
+        # self.add_new_spots(5, 1, 3)
+        # self.add_new_spots(5, 1, 4)
+        # self.add_new_spots(5, 1, 5)
+        # self.add_new_spots(5, 1, 6)
+        # self.add_new_spots(2, 2, 1)
+        # self.add_new_spots(2, 2, 2)
+        # self.add_new_spots(3, 2, 1)
+        # self.add_new_spots(3, 2, 2)
+        # self.add_new_spots(4, 2, 1)
+        # self.add_new_spots(4, 2, 2)
+        # self.add_new_spots(5, 2, 1)
+        # self.add_new_spots(5, 2, 2)
 
     def create_tables(self):
         self.cursor.execute(spots_db)
         self.cursor.execute(sessions_db)
         self.connection.commit()
-        self.cursor.execute('INSERT INTO spots (floor, building, spot_number, is_available) VALUES '
-                            '(1, 2, 99, 1)')
-        self.connection.commit()
+
+
 
 
 
@@ -128,10 +155,13 @@ class Database:
             [token])
         return self.cursor.fetchone()
 
-    def delete_old_sessions(self):
-        self.connection.execute('BEGIN;')
 
+    def delete_old_sessions(self):
         try:
+            in_transaction = self.connection.in_transaction
+            if not in_transaction:
+                self.connection.execute('BEGIN;')
+
             self.cursor.execute(
                 """
                 DELETE FROM sessions
@@ -149,8 +179,11 @@ class Database:
                 );
                 """
             )
-            self.connection.commit()
+
+            if not in_transaction:
+                self.connection.commit()
 
         except sqlite3.Error as e:
-            self.connection.rollback()
+            if not in_transaction:
+                self.connection.rollback()
             print(f"An error occurred: {e}")

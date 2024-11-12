@@ -10,15 +10,34 @@
         body {
             background-color: #343a40;
             color: #ffffff;
+            font-family: 'Arial', sans-serif;
         }
         h1 {
             margin-bottom: 40px;
+            font-size: 2.5rem;
         }
         .form-group label {
             font-weight: bold;
         }
         .btn-success {
             margin-top: 20px;
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+        .btn-success:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+        .form-control {
+            background-color: #495057;
+            border: 1px solid #ced4da;
+            color: #ffffff;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .form-control:focus {
+            background-color: #343a40;
+            border-color: #17a2b8;
+            box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
         }
         .option-tooltip-time {
             display: inline-block;
@@ -87,7 +106,7 @@
             }
 
             var optionElements = [];
-            for (var i = 1; i <= 48; i++) { // 48 шагов по 15 минут (12 часов)
+            for (var i = 1; i <= 80; i++) { // 80 шагов по 15 минут (20 часов)
                 startMinute += 15;
                 if (startMinute >= 60) {
                     startHour += 1;

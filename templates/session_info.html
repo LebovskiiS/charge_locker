@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,76 +9,52 @@
     <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet">
     <style>
         .info-card {
-            margin-top: 2rem;
+            margin: 2rem 0;
             background-color: #343a40;
         }
+
         .info-card .card-title {
             font-size: 1.75rem;
             color: #ffffff;
         }
+
         .info-card .card-text {
             font-size: 1.25rem;
             color: #ffffff;
         }
+
         .btn-container {
             margin-top: 1rem;
             display: flex;
             justify-content: space-between;
         }
+
         .btn-container .btn {
             width: 48%;
         }
     </style>
 </head>
+
 <body>
     <div class="container mt-5">
         <h1 class="text-center text-light">Session Information</h1>
         <div class="card info-card border-light">
             <div class="card-body">
                 <h5 class="card-title">Spot Information</h5>
-                <p class="card-text"><strong>Start Time:</strong> {{ start }}</p>
                 <p class="card-text"><strong>End Time:</strong> {{ end }}</p>
-                <p class="card-text"><strong>Remaining Time:</strong> <span id="remaining-time"></span></p>
                 <p class="card-text"><strong>Floor:</strong> {{ floor }}</p>
                 <p class="card-text"><strong>Building:</strong> {{ building }}</p>
                 <p class="card-text"><strong>Spot Number:</strong> {{ spot_number }}</p>
                 <div class="btn-container">
                     <a href="/stop" class="btn btn-danger">Stop Booking</a>
-                    <a href="/extend" class="btn btn-success">Extend Booking</a>
+                    <a href="/info/en" class="btn btn-info">Information</a>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function updateRemainingTime() {
-                var endTimeStr = "{{ end }}";
-                var endTime = new Date(Date.parse(endTimeStr)); // Использование Date.parse для точного парсинга
-
-                var now = new Date();
-
-                var remainingTimeMs = endTime - now;
-                if (remainingTimeMs > 0) {
-                    var remainingHours = Math.floor(remainingTimeMs / (1000 * 60 * 60));
-                    var remainingMinutes = Math.floor((remainingTimeMs % (1000 * 60 * 60)) / (1000 * 60));
-                    var timeStr = "";
-
-                    if (remainingHours > 0) {
-                        timeStr += `${remainingHours}h `;
-                    }
-                    if (remainingMinutes > 0 || remainingHours === 0) {
-                        timeStr += `${remainingMinutes}m`;
-                    }
-                    document.getElementById('remaining-time').innerText = timeStr;
-                } else {
-                    document.getElementById('remaining-time').innerText = "Session Ended";
-                }
-            }
-
-            updateRemainingTime();  // Исходный расчет
-            setInterval(updateRemainingTime, 1000);  // Обновление каждую секунду
-        });
-    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

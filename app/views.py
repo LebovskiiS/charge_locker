@@ -28,9 +28,11 @@ def main_view():
     spot_id = session[1]
     start = session[2]
     end = session[3]
-    floor = session[7]
-    building = session[9]
-    spot_number = session[6]
+    floor = session[6]
+    building = session[7]
+    spot_number = session[8]
+    print(f'floor:{floor}, building:{building}, '
+          f'spot_number:{spot_number}, start:{start}, end:{end}')
     loger.warning('main rendering session_info.html')
     return render_template(
         'session_info.html', spot_id=spot_id, start=start, end=end,
@@ -42,7 +44,7 @@ def main_view():
 def get_spots_view():
     spots = db.get_available_spots()
     if spots:
-        loger.debug('returned ava')
+        loger.debug('returned spots')
         return render_template('available_spots.html', spots=spots)
     else:
         return render_template('no_available_spots.html')
@@ -90,12 +92,13 @@ def session_view():
     session_info = get_session_by_token_controller(token)  # id, spot_id, start, end, token
     spot_info = get_spot_info_by_token_controller(token)
 
-    floor = spot_info[1]
-    building = spot_info[2]
-    spot_number = spot_info[3]
-    start = session_info[2]
-    end = session_info[3]
-
+    floor = spot_info[2]
+    building = spot_info[3]
+    spot_number = spot_info[4]
+    start = session_info[5]
+    end = session_info[6]
+    print(f'floor:{floor}, building:{building}, '
+          f'spot_number:{spot_number}, start:{start}, end:{end}')
     return render_template(
         'session_info.html', start=start, end=end, floor=floor,
         building= building, spot_number= spot_number
@@ -106,6 +109,10 @@ def session_view():
 def stop_booking_view():
     stop_booking_controller(request.cookies.get('jwt'))
     return redirect('/')
+
+
+def info_view_en():
+    return render_template('info_en.html')
 
 # @check_token
 # def extend_time_view():

@@ -1,3 +1,5 @@
+
+
 sessions_db = (
     'CREATE TABLE IF NOT EXISTS sessions ('
     'ID INTEGER PRIMARY KEY AUTOINCREMENT, '
@@ -23,4 +25,6 @@ spots_db = (
 
 
 show_available_spots = 'SELECT * FROM spots WHERE is_available = 1'
+
+
 
