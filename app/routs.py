@@ -21,3 +21,4 @@ app.add_url_rule('/session', view_func= session_view, methods=['GET'], endpoint=
 app.add_url_rule('/stop', view_func= stop_booking_view, methods= ['GET'])
 
 app.add_url_rule('/info/en', view_func= info_view_en, methods=['GET'])
+app.add_url_rule('/information/cn')

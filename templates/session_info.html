@@ -32,6 +32,9 @@
         .btn-container .btn {
             width: 48%;
         }
+        .btn-info {
+            background-color: #17a2b8 !important;
+        }
     </style>
 </head>
 
@@ -46,7 +49,7 @@
                 <p class="card-text"><strong>Building:</strong> {{ building }}</p>
                 <p class="card-text"><strong>Spot Number:</strong> {{ spot_number }}</p>
                 <div class="btn-container">
-                    <a href="/stop" class="btn btn-danger">Stop Booking</a>
+                    <a href="/stop" class="btn btn-danger" style="background-color: #dc3545;">Stop Booking</a>
                     <a href="/info/en" class="btn btn-info">Information</a>
                 </div>
             </div>

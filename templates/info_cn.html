@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>充电站应用程序规则</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .container {
+            margin-top: 2rem;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .language-buttons a {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="language-buttons d-flex justify-content-end mb-3">
+            <a href="/info/en" class="btn btn-light btn-sm">EN</a>
+            <a href="/info/ch" class="btn btn-light btn-sm">中文</a>
+            <a href="/info/ru" class="btn btn-light btn-sm">РУ</a>
+            <a href="/info/fa" class="btn btn-light btn-sm">فا</a>
+        </div>
+        <div class="card bg-dark text-light">
+            <div class="card-body">
+                <h1 class="card-title text-center">充电站应用程序规则</h1>
+                <p class="card-text">本应用程序专为使用本大楼充电站的用户设计，以简化他们的生活。以下是一些规则，以帮助我们最大限度地利用这些功能。</p>
+                <ol class="card-text">
+                    <li>一旦找到空闲位置，扫描二维码。</li>
+                    <li>在可用插槽列表中找到您的位置（所有插槽都有编号）。</li>
+                    <li>选择您想预订位置的时间。请注意，如果您在夜间将车辆停泊以进行充电，您的预订将在上午10点自动取消。</li>
+                    <li>当您重新进入站点时，您的预订信息将会显示。</li>
+                    <li>如果您的车在预定时间之前移出了充电器，您可以再次扫描二维码并停止预订。这样其他用户就会知道该位置是空闲的。</li>
+                </ol>
+                <p class="card-text">该应用程序处于测试阶段，并将不断改进。如果您发现应用程序无法正常工作，请通过电话 <a href="tel:8188134957" class="text-light">8188134957</a> 或我网站上的任何联系方式告知我。目前，本应用程序的开发者正寻求Python开发者的工作。如果您希望就职位与我联系，请访问我的网站<a href="mailto:zheliabovskii@info.com" class="text-light">zheliabovskii@info.com</a>。
+                </p>
+                <div class="btn-container">
+                    <a href="/" class="btn btn-success" style="background-color: #28a745; border-color: #28a745;">我接受规则</a>
+                    <a href="mailto:zheliabovskii@info.com" class="btn btn-info" style="background-color: #17a2b8; border-color: #17a2b8;">关于开发者</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
