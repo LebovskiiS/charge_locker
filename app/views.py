@@ -114,6 +114,15 @@ def stop_booking_view():
 def info_view_en():
     return render_template('info_en.html')
 
+def info_view_ch():
+    return render_template('info_ch.html')
+
+def info_view_ru():
+    return render_template('info_ru.html')
+
+def info_view_fa():
+    return render_template('info_fa.html')
+
 # @check_token
 # def extend_time_view():
 #     session = get_session_by_token_controller(request.cookies.get('jwt'))

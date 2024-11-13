@@ -1,10 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charging Station App Rules</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .container {
+            margin-top: 2rem;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .language-buttons a {
+            margin-right: 5px;
+        }
+    </style>
 </head>
+
 <body>
-$END$
+    <div class="container">
+        <div class="language-buttons d-flex justify-content-end mb-3">
+            <a href="/info/en" class="btn btn-light btn-sm">EN</a>
+            <a href="/info/ch" class="btn btn-light btn-sm">中文</a>
+            <a href="/info/ru" class="btn btn-light btn-sm">РУ</a>
+            <a href="/info/fa" class="btn btn-light btn-sm">فا</a>
+        </div>
+        <div class="card bg-dark text-light">
+            <div class="card-body">
+                <h1 class="card-title text-center">Charging Station App Rules</h1>
+                <p class="card-text">Это приложение сделано специально чтобы облегчить жизнь всем кто пользуется зарядочными станциями в этом билдинге. Вот несколько правил, которые помогут нам максимально эффективно осуществлять эти функции.</p>
+                <ol class="card-text">
+                    <li>Как только нашли свободное место, отсканируйте QR code.</li>
+                    <li>Найдите свой спот в списке свободных слотов (все слоты пронумерованы).</li>
+                    <li>Выберите время, на которое хотели бы забронировать спот. Обратите внимание, что если вы оставили машину на ночь на зарядке, то ваша бронь удаляется автоматически в 10AM.</li>
+                    <li>Теперь при повторном заходе на сайт, у вас будет видна информация о вашем бронировании.</li>
+                    <li>Если вы снимаете машину с зарядки раньше времени, вы можете отсканировать QR code еще раз и остановить бронирование. Тогда все остальные люди будут знать, что спот свободен.</li>
+                </ol>
+                <p class="card-text">Приложение находится на этапе тестирования и будет улучшаться. Если заметите некорректную работу приложения, пожалуйста, сообщите мне по номеру телефона <a href="tel:8188134957" class="text-light">8188134957</a> или по любой контактной информации на моем сайте. В данный момент разработчик данного приложения ищет работу на позицию Python Developer, если у вас есть какие-то предложения, мой сайт: <a href="http://zheliabovskii.info" class="text-light">zheliabovskii.info</a>.</p>
+                <div class="btn-container">
+                    <a href="/" class="btn btn-success" style="background-color: #28a745; border-color: #28a745;">Я ПРИНИМАЮ ПРАВИЛА</a>
+                    <a href="http://zheliabovskii.info" class="btn btn-info" style="background-color: #17a2b8; border-color: #17a2b8;">О Разработчике</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

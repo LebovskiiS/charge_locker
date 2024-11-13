@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,22 +13,15 @@
             color: #ffffff;
             font-family: 'Arial', sans-serif;
         }
+
         h1 {
             margin-bottom: 40px;
             font-size: 2.5rem;
         }
+
         .form-group label {
             font-weight: bold;
         }
-        .btn-success {
-            margin-top: 20px;
-            background-color: #17a2b8;
-            border-color: #17a2b8;
-            color: #ffffff;
-        }
-        .btn-success:hover {
-            background-color: #17a2b8;
-            border-color: #17a2b8;
 
         .btn-success {
             margin-top: 20px;
@@ -35,51 +29,29 @@
             border-color: #17a2b8;
             color: #ffffff;
         }
+
         .btn-success:hover {
             background-color: #17a2b8;
             border-color: #17a2b8;
-        .form-control {
-            background-color: #495057;
-            border: 1px solid #ced4da;
-            color: #ffffff;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-        .form-control:focus {
-            background-color: #343a40;
-            border-color: #17a2b8;
-            box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
-        }
-        .option-tooltip-time {
-            display: inline-block;
-        }
-        .option-tooltip-plus {
-            display: inline-block;
-            color: rgba(255, 255, 255, 0.7);
-            float: right;
         }
 
-            background-color: #17a2b8;
-            border-color: #17a2b8;
-            color: #ffffff;
-        }
-        .btn-success:hover {
-            background-color: #17a2b8;
-            border-color: #17a2b8;
         .form-control {
             background-color: #495057;
             border: 1px solid #ced4da;
             color: #ffffff;
-            color: #ffffff;
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
+
         .form-control:focus {
             background-color: #343a40;
             border-color: #17a2b8;
             box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
         }
+
         .option-tooltip-time {
             display: inline-block;
         }
+
         .option-tooltip-plus {
             display: inline-block;
             color: rgba(255, 255, 255, 0.7);
@@ -87,9 +59,10 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Select Time for Spot {{ spot_number }}, Building {{ building }}, Floor {{ floor }}</h1>
+        <h1 class="text-center">Select Time</h1>
         <form id="booking-form" method="post" action="/submit">
             <input type="hidden" name="spot_id" value="{{ spot_id }}">
             <input type="hidden" name="floor" value="{{ floor }}">
@@ -113,7 +86,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             var now = new Date();
             var hours = now.getHours();
             var minutes = now.getMinutes();
@@ -122,15 +95,18 @@
             var currentTime = `${hours}:${String(minutes).padStart(2, '0')} ${period}`;
             document.getElementById('time_start').value = currentTime;
 
-            generateEndTimeOptions();
+            generateEndTimeOptions(now);
         });
 
-        document.getElementById('time_start').addEventListener('change', generateEndTimeOptions);
+        document.getElementById('time_start').addEventListener('change', function () {
+            var now = new Date();
+            generateEndTimeOptions(now);
+        });
 
-        function generateEndTimeOptions() {
+        function generateEndTimeOptions(currentDateTime) {
             var timeStart = document.getElementById('time_start').value;
             var timeEndSelect = document.getElementById('time_end');
-            timeEndSelect.innerHTML = ''; // Очистить предыдущие варианты
+            timeEndSelect.innerHTML = ''; // Clear previous options
 
             if (!timeStart) return;
 
@@ -143,8 +119,10 @@
                 startHour = 0;
             }
 
+            var maxBookingHours = currentDateTime.getHours() >= 17 ? (24 - startHour) + 10 : 15; // Max booking duration in hours
             var optionElements = [];
-            for (var i = 1; i <= 80; i++) { // 80 шагов по 15 минут (20 часов)
+
+            for (var i = 1; i <= maxBookingHours * 4; i++) { // 4 steps per hour (15 min intervals)
                 startMinute += 15;
                 if (startMinute >= 60) {
                     startHour += 1;
@@ -164,7 +142,7 @@
                     : `+${minutesToAdd}min`;
 
                 var option = document.createElement('option');
-                option.value = displayTime; // Сохраняем значение в 12-часовом формате
+                option.value = displayTime; // Save value in 12-hour format
                 option.innerHTML = `<span class="option-tooltip-time">${displayTime}</span><span class="option-tooltip-plus">${tooltipText}</span>`;
                 optionElements.push(option);
             }
@@ -173,4 +151,5 @@
         }
     </script>
 </body>
+
 </html>
