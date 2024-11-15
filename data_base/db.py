@@ -9,6 +9,7 @@ host='localhost',
 port='5432'
 
 
+
 class Database:
     def __init__(self):
         self.connection = psycopg2.connect(

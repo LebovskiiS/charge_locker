@@ -36,7 +36,7 @@ def is_the_spot_available(func):
 
 
 
-def delete_old_sessions(func):
+def delete_old_sessions(func): #w
     @wraps(func)
     def wrapped():
         db.delete_old_sessions()
