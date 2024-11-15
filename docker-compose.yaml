@@ -1,0 +1,42 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: charger_locker_postgres_container
+    image: postgres
+    hostname: postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - '5436:5432'
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: charger_locker_pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pleer4you@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - '90:80'
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+    postgres:
+    pgadmin:
