@@ -4,7 +4,7 @@ sessions_db = """CREATE TABLE IF NOT EXISTS sessions
                (ID SERIAL PRIMARY KEY NOT NULL,
                uid INTEGER NOT NULL,
                token VARCHAR(255) NOT NULL,
-               state VARCHAR(255) NOT NULL,
+               state VARCHAR(255) DEFAULT 'your_default_value',
                spot_id INTEGER NOT NULL,
                "start" INTEGER NOT NULL,
                "end" INTEGER NOT NULL,             

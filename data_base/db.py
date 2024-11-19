@@ -1,14 +1,7 @@
-
+from datetime import datetime
 import psycopg2
 from .scripts import sessions_db, spots_db, show_available_spots
 from config import DB_NAME, DB_USER, DB_PASSWORD
-dbname=DB_NAME,
-user=DB_USER,
-password=DB_PASSWORD,
-host='localhost',
-port='5432'
-
-
 
 class Database:
     def __init__(self):
@@ -17,7 +10,7 @@ class Database:
             user=DB_USER,
             password=DB_PASSWORD,
             host='localhost',
-            port='5432'
+            port='5566'
         )
         self.cursor = self.connection.cursor()
         self.create_tables()
@@ -25,49 +18,17 @@ class Database:
         self.load_initial_spots()
 
     def load_initial_spots(self):
-        self.add_new_spots(1, 1, 1)
         self.create_tables()
         self.connection.commit()
-        self.add_new_spots(1, 1, 1)
-        self.add_new_spots(1, 1, 2)
-        self.add_new_spots(1, 1, 3)
-        self.add_new_spots(2, 1, 1)
-        self.add_new_spots(2, 1, 2)
-        self.add_new_spots(2, 1, 3)
-        self.add_new_spots(2, 1, 4)
-        self.add_new_spots(3, 1, 1)
-        self.add_new_spots(3, 1, 2)
-        self.add_new_spots(3, 1, 3)
-        self.add_new_spots(3, 1, 4)
-        self.add_new_spots(4, 1, 1)
-        self.add_new_spots(4, 1, 2)
-        self.add_new_spots(4, 1, 3)
-        self.add_new_spots(4, 1, 4)
-        self.add_new_spots(5, 1, 1)
-        self.add_new_spots(5, 1, 2)
-        self.add_new_spots(5, 1, 3)
-        self.add_new_spots(5, 1, 4)
-        self.add_new_spots(5, 1, 5)
-        self.add_new_spots(5, 1, 6)
-        self.add_new_spots(2, 2, 1)
-        self.add_new_spots(2, 2, 2)
-        self.add_new_spots(3, 2, 1)
-        self.add_new_spots(3, 2, 2)
-        self.add_new_spots(4, 2, 1)
-        self.add_new_spots(4, 2, 2)
-        self.add_new_spots(5, 2, 1)
-        self.add_new_spots(5, 2, 2)
-
-        # Methods some_code
+        for floor in range(1, 6):
+            for building in range(1, 3):
+                for spot_number in range(1, 7):
+                    self.add_new_spots(floor, building, spot_number)
 
     def create_tables(self):
         self.cursor.execute(spots_db)
-        self.cursor.execute(sessions_db)
+        self.cursor.execute(sessions_db.replace(');', ', state VARCHAR(50) DEFAULT \'pending\');'))
         self.connection.commit()
-
-
-
-
 
     def get_available_spots(self):
         self.cursor.execute(show_available_spots)
@@ -83,61 +44,42 @@ class Database:
             })
         return spots_to_return
 
-
-
     def is_available(self, spot_id):
         self.cursor.execute('SELECT is_available FROM spots WHERE ID = %s', (spot_id,))
         data = self.cursor.fetchone()
-        if data and data[0]:
-            return True
-        return False
-
-
+        return data and data[0]
 
     def get_spot_id(self, floor, building, spot_number):
         self.cursor.execute('SELECT ID FROM spots WHERE floor=%s AND building=%s AND spot_number=%s',
-                             (floor, building, spot_number))
-        spot_id = self.cursor.fetchone()
-        return spot_id
+                            (floor, building, spot_number))
+        return self.cursor.fetchone()
 
+    def book_spot(self, token, spot_id, start, end, uid, state='pending'):
+        if isinstance(start, datetime) and isinstance(end, datetime):
+            start_timestamp = int(start.timestamp())
+            end_timestamp = int(end.timestamp())
+        else:
+            raise ValueError("start and end parameters must be datetime objects")
 
-
-    def book_spot(self, token, spot_id, start, end):
         self.cursor.execute('UPDATE spots SET is_available = 0 WHERE ID = %s', (spot_id,))
         self.connection.commit()
         self.cursor.execute(
-            'INSERT INTO sessions (start, end, token, spot_id) '
-            'VALUES (%s, %s, %s, %s)', (start, end, token, spot_id))
-        self.connection.commit()
-        self.cursor.execute('SELECT lastval()')
-        return self.cursor.fetchone()[0]
-
-
-
+            'INSERT INTO sessions (start, "end", token, spot_id, uid, state) VALUES (%s, %s, %s, %s, %s, %s)',
+            (start_timestamp, end_timestamp, token, spot_id, uid, state)
+        )
     def return_token_if_exists(self, token):
         self.cursor.execute('SELECT token FROM sessions WHERE token = %s', (token,))
-        cookies = self.cursor.fetchone()
-        if cookies:
-            return token
-        else:
-            return False
-
-
+        return self.cursor.fetchone()
 
     def show_end_time(self, token):
-        self.cursor.execute('SELECT end FROM sessions WHERE cookies = %s', (token,))
-        end_time = self.cursor.fetchone()
-        return end_time
-
-
+        self.cursor.execute('SELECT "end" FROM sessions WHERE token = %s', (token,))
+        return self.cursor.fetchone()
 
     def add_new_spots(self, floor, building, spot_number):
         self.cursor.execute('INSERT INTO spots (floor, building, spot_number) VALUES (%s, %s, %s)',
-                             (floor, building, spot_number))
+                            (floor, building, spot_number))
         self.cursor.execute('SELECT lastval()')
-        spot_id = self.cursor.fetchone()[0]
-        return spot_id
-
+        return self.cursor.fetchone()[0]
 
     def stop_booking(self, token):
         self.cursor.execute('DELETE FROM sessions WHERE token = %s', (token,))
@@ -155,36 +97,28 @@ class Database:
         self.connection.commit()
         return 'ok'
 
-
-
     def get_session_by_token(self, token):
         self.cursor.execute('SELECT * FROM sessions WHERE token = %s', [token])
         return self.cursor.fetchone()
-
 
     def get_spot_info_by_id(self, spot_id):
         self.cursor.execute('SELECT * FROM spots WHERE id = %s', [spot_id])
         return self.cursor.fetchone()
 
-
     def get_spot_info_by_token(self, token):
         self.cursor.execute(
             'SELECT * FROM spots JOIN sessions ON spots.id = sessions.spot_id WHERE token = %s',
-            [token])
+            [token]
+        )
         return self.cursor.fetchone()
-
-
-
 
     def delete_old_sessions(self):
         try:
             self.cursor.execute('BEGIN;')
-
-
             self.cursor.execute(
                 '''
                 DELETE FROM sessions
-                WHERE (end IS NOT NULL AND end < to_timestamp(EXTRACT(epoch FROM NOW()))) OR end IS NULL;
+                WHERE ("end" IS NOT NULL AND to_timestamp("end") < NOW()) OR "end" IS NULL;
                 '''
             )
             self.cursor.execute(
@@ -194,7 +128,7 @@ class Database:
                 WHERE ID IN (
                     SELECT spot_id
                     FROM sessions
-                    WHERE (end IS NOT NULL AND end < to_timestamp(EXTRACT(epoch FROM NOW()))) OR end IS NULL
+                    WHERE ("end" IS NOT NULL AND to_timestamp("end") < NOW()) OR "end" IS NULL
                 );
                 '''
             )
@@ -202,4 +136,3 @@ class Database:
         except psycopg2.Error as e:
             self.connection.rollback()
             print(f"An error occurred: {e}")
-

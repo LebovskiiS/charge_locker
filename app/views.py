@@ -14,7 +14,6 @@ def time_to_db_format(date_str, time_str):
     return datetime_obj.strftime('%Y-%m-%d %I:%M %p')
 
 
-
 def full_time_to_12_hour_format(datetime_str):
     datetime_obj = datetime.strptime(datetime_str, '%Y-%m-%d %I:%M %p')
     return datetime_obj.strftime('%I:%M %p')
@@ -40,7 +39,6 @@ def main_view():
     )
 
 
-
 def get_spots_view():
     spots = db.get_available_spots()
     if spots:
@@ -48,8 +46,6 @@ def get_spots_view():
         return render_template('available_spots.html', spots=spots)
     else:
         return render_template('no_available_spots.html')
-
-
 
 
 def choose_time_view(spot_id):
@@ -62,28 +58,28 @@ def choose_time_view(spot_id):
         floor=floor, spot_id=spot_id
     )
 
-
 @delete_old_sessions
 def submit_view():
     token = create_token()
     spot_id = request.form.get('spot_id')
     start_12_hour = request.form.get('time_start')  # В 12-часовом формате ('4:30 PM')
     end_12_hour = request.form.get('time_end')  # В 12-часовом формате ('6:00 PM')
+    uid = request.form.get('uid')  # Получение uid из формы
 
-    # Создаем текущую дату для включения в datetime формат записи
+    # Создание текущей даты для включения в формат datetime
     current_date = datetime.now().strftime('%Y-%m-%d')
 
-    # Преобразуем в формат для хранения в базе данных
+    # Преобразование в формат для хранения в базе данных
     start_db_format = time_to_db_format(current_date, start_12_hour)
     end_db_format = time_to_db_format(current_date, end_12_hour)
 
     try:
-        submit_controller(token, spot_id, start_db_format, end_db_format)
+        submit_controller(token, spot_id, start_db_format, end_db_format, uid)
         resp = redirect('/')
         resp.set_cookie(key='jwt', value=token, max_age=60 * 60 * 16)
         return resp
     except Exception as e:
-        return f'something went wrong: {e}'
+        return f'что-то пошло не так: {e}'
 
 
 @check_token
@@ -101,7 +97,7 @@ def session_view():
           f'spot_number:{spot_number}, start:{start}, end:{end}')
     return render_template(
         'session_info.html', start=start, end=end, floor=floor,
-        building= building, spot_number= spot_number
+        building=building, spot_number=spot_number
     )
 
 
@@ -114,25 +110,14 @@ def stop_booking_view():
 def info_view_en():
     return render_template('info_en.html')
 
+
 def info_view_ch():
     return render_template('info_ch.html')
+
 
 def info_view_ru():
     return render_template('info_ru.html')
 
+
 def info_view_fa():
     return render_template('info_fa.html')
-
-# @check_token
-# def extend_time_view():
-#     session = get_session_by_token_controller(request.cookies.get('jwt'))
-#     spot = get_spot_info_by_token_controller(request.cookies.get('jwt'))
-#     floor = spot[1]
-#     building = spot[2]
-#     spot_number = spot[3]
-#     start = session[1]
-#     end = session[2]
-#     return render_template('extend_booking.html', floor= floor, building= building, spot_number= spot_number,
-#                            start= start, end= end)
-#
-
