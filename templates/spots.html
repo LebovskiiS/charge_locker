@@ -39,7 +39,7 @@
         }
 
         .table td, .table th {
-            text-align: center; /* Центрирование текста */
+            text-align: center;
         }
     </style>
 </head>
@@ -55,17 +55,30 @@
                     <th>Building</th>
                     <th>Floor</th>
                     <th>Spot Number</th>
-                    <th>Action</th>
+                    <th>Status / Action</th>
                 </tr>
             </thead>
             <tbody>
-                {% for spot in spots %}
+                <!-- Сначала отображаем занятые слоты -->
+                {% for spot in booked_spots %}
                 <tr>
                     <td>{{ spot.building }}</td>
                     <td>{{ spot.floor }}</td>
                     <td>{{ spot.spot_number }}</td>
                     <td>
-                        <a class="btn btn-primary" href="/time/{{spot.ID}}">
+                        {{ spot.end_time or "N/A" }}
+                    </td>
+                </tr>
+                {% endfor %}
+
+                <!-- Затем отображаем доступные слоты -->
+                {% for spot in available_spots %}
+                <tr>
+                    <td>{{ spot.building }}</td>
+                    <td>{{ spot.floor }}</td>
+                    <td>{{ spot.spot_number }}</td>
+                    <td>
+                        <a class="btn btn-primary" href="/time/{{ spot.ID }}">
                             Book Spot
                         </a>
                     </td>

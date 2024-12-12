@@ -24,7 +24,7 @@ spots_db = (
 
 
 
-show_available_spots = 'SELECT * FROM spots WHERE is_available = 1'
+show_spots = 'SELECT * FROM spots'
 
 
 

@@ -23,7 +23,7 @@ def full_time_to_12_hour_format(datetime_str):
 @delete_old_sessions
 @check_token
 def main_view():
-    loger.debug('main func started with token')
+    loger.debug('main func started token found')
     session = main_controller(request.cookies.get('jwt'))
     spot_id = session[1]
     start = session[2]
@@ -40,16 +40,18 @@ def main_view():
     )
 
 
-
 def get_spots_view():
-    spots = db.get_available_spots()
-    if spots:
-        loger.debug('returned spots')
-        return render_template('available_spots.html', spots=spots)
-    else:
-        return render_template('no_available_spots.html')
+    all_spots = db.get_all_spots()
+    print("All spots:", all_spots)
 
+    # Разделяем споты на занятые и свободные
+    booked_spots = [spot for spot in all_spots if spot['end_time']]
+    available_spots = [spot for spot in all_spots if not spot['end_time']]
 
+    # Сортируем занятые споты по `end_time` (если нет времени окончания, оно игнорируется)
+    booked_spots.sort(key=lambda spot: spot['end_time'])
+
+    return render_template('spots.html', available_spots=available_spots, booked_spots=booked_spots)
 
 
 def choose_time_view(spot_id):

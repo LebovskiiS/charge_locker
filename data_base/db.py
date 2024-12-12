@@ -1,5 +1,5 @@
 import sqlite3
-from .scripts import sessions_db, spots_db, show_available_spots
+from .scripts import sessions_db, spots_db, show_spots
 from config import WORK_DIRECTORY
 
 
@@ -54,22 +54,31 @@ class Database:
         self.cursor.execute(sessions_db)
         self.connection.commit()
 
+    def get_all_spots(self):
+        # Объединение всех свободных и занятых мест
+        results = self.cursor.execute("""
+            SELECT 
+                spots.id, spots.floor, spots.building, spots.spot_number, 
+                spots.is_available, 
+                sessions.end
+            FROM 
+                spots
+            LEFT JOIN 
+                sessions ON spots.id = sessions.spot_id
+        """).fetchall()
 
-
-
-
-    def get_available_spots(self):
-        available_spots = self.cursor.execute(show_available_spots).fetchall()
         spots_to_return = []
-        for spot in available_spots:
+        for spot in results:
             spots_to_return.append({
                 'ID': spot[0],
                 'floor': spot[1],
                 'building': spot[2],
                 'spot_number': spot[3],
-                'is_available': spot[4]
+                'is_available': spot[4],  # Свободно или занято
+                'end_time': spot[5]  # Время окончания, если есть
             })
         return spots_to_return
+
 
 
 
