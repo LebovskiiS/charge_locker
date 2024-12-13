@@ -3,109 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Available Spots</title>
+    <title>CHARGER LOCKER</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #1c1f26;
             color: #e2e2e2;
+            font-family: 'Arial', sans-serif;
         }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+
+        /* Заголовки и верхние элементы */
+        .header-row {
+            display: flex;
+            justify-content: space-between; /* Заботимся о симметрии */
+            align-items: center;          /* Вертикально центрируем */
             border-bottom: 2px solid #444b54;
             padding-bottom: 10px;
-            color: #f8f9fa;
+            margin-bottom: 20px;
         }
+
+        .title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f8f9fa;
+            letter-spacing: 0.5px;
+        }
+
+        .address {
+            font-size: 0.9rem;
+            font-weight: lighter;
+            color: #aaa;
+            text-align: right;
+            margin-top: 5px;
+        }
+
         .instruction-btn {
             display: inline-block;
             background-color: #17a2b8;
             border: none;
             color: white;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: bold;
-            padding: 10px 20px;
+            padding: 8px 20px;
             border-radius: 30px;
             transition: transform 0.3s, background-color 0.3s;
             text-decoration: none;
+            margin-top: 10px;
         }
+
         .instruction-btn:hover {
             transform: translateY(-3px);
             background-color: #117a8b;
         }
+
+        /* Таблица и стили для неё */
         table {
             border-collapse: collapse;
             width: 100%;
         }
+
         thead th {
-            position: sticky; /* Липкий заголовок */
+            position: sticky;
             top: 0;
             z-index: 2;
-            background-color: #454d55;
+            background-color: #222831;
             color: #ffffff;
             text-align: center;
+            font-size: 0.85rem;
             border-bottom: 2px solid #666;
             padding: 10px;
         }
+
         tbody tr.group-row {
-            background-color: #343a40;
+            background-color: #333a40;
             text-align: center;
             font-weight: bold;
             color: #17a2b8;
+            font-size: 1rem;
         }
+
         tbody tr.floor-row {
             background-color: #2b2e33;
             text-align: center;
             font-weight: bold;
             color: #e2df72;
+            font-size: 0.95rem;
         }
+
         tbody td {
             text-align: center;
             vertical-align: middle;
+            font-size: 0.85rem;
+            padding: 8px;
         }
+
         .table tbody tr:hover {
             background-color: #3b4048;
         }
+
         .btn-primary {
             padding: 8px 15px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
         }
+
         .btn-primary:hover {
             background-color: #0056b3;
         }
+
         .text-warning {
             font-weight: bold;
         }
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-            .instruction-btn {
-                font-size: 0.9rem;
-                padding: 8px 15px;
-            }
-            .btn-primary {
-                font-size: 0.8rem;
-                padding: 6px 12px;
-            }
-        }
-        /* Увеличенное окно прокрутки */
+
         .table-wrapper {
-            max-height: 800px; /* Увеличенная высота */
+            max-height: 700px;
             overflow-y: auto;
             border: 1px solid #444b54;
-            border-radius: 5px; /* Круглые границы */
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.8rem;
+            }
+
+            .address {
+                font-size: 0.8rem;
+                margin-top: 3px;
+            }
+
+            .instruction-btn {
+                font-size: 0.85rem;
+                padding: 8px 15px;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            thead th {
+                font-size: 0.8rem;
+            }
+
+            tbody td {
+                font-size: 0.8rem;
+                padding: 5px;
+            }
+
+            .btn-primary {
+                font-size: 0.75rem;
+                padding: 5px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-row {
+                flex-direction: column; /* Перестраиваем заголовок на вертикальный вид */
+                align-items: flex-start; /* Заголовок и кнопка выравниваются влево */
+            }
+
+            .address {
+                font-size: 0.75rem;
+                text-align: left; /* Становится влево на маленьких устройствах */
+            }
+
+            .instruction-btn {
+                max-width: 100%; /* Растягивается на ширину */
+                margin-top: 8px;
+            }
+
+            .title {
+                font-size: 1.5rem;
+                margin-bottom: 5px;
+            }
+
+            thead th, tbody td {
+                padding: 5px;
+                font-size: 0.75rem;
+            }
+
+            .btn-primary {
+                font-size: 0.7rem;
+                padding: 5px 10px;
+                display: block;
+                margin: 0 auto;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">Available Parking Spots</h1>
-        <div class="text-center mb-4">
+    <div class="container mt-4">
+        <!-- Заголовок и кнопка инструкции -->
+        <div class="header-row">
+            <div>
+                <div class="title">CHARGER LOCKER</div>
+                <div class="address">2100 Sullivan, Irvine</div>
+            </div>
             <a class="instruction-btn" href="/info/en">View Instructions</a>
         </div>
+
+        <!-- Таблица -->
         <div class="table-wrapper">
             <table class="table table-striped table-hover">
                 <thead>
@@ -117,7 +215,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Забронированные места (первыми) -->
+                    <!-- Забронированные места -->
                     {% if booked_spots %}
                         <tr class="group-row">
                             <td colspan="4">Booked Spots (Earliest Available)</td>

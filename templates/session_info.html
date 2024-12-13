@@ -8,56 +8,126 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet">
     <style>
-        .info-card {
-            margin: 2rem 0;
-            background-color: #343a40;
+        body {
+            background-color: #1c1f26;
+            color: #e2e2e2;
+            font-family: 'Arial', sans-serif;
         }
 
-        .info-card .card-title {
-            font-size: 1.75rem;
-            color: #ffffff;
-        }
-
-        .info-card .card-text {
-            font-size: 1.25rem;
-            color: #ffffff;
-        }
-
-        .btn-container {
-            margin-top: 1rem;
+        .header-row {
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #444b54;
         }
 
-        .btn-container .btn {
-            width: 48%;
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: bold;
         }
+
+        .instruction-btn {
+            display: inline-block;
+            background-color: #17a2b8;
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .instruction-btn:hover {
+            transform: translateY(-3px);
+            background-color: #117a8b;
+        }
+
+        .card-container {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .info-card {
+            width: 100%;
+            max-width: 600px;
+            background-color: #2d333b;
+            border: 1px solid #444b54;
+            border-radius: 8px;
+        }
+
+        .info-card h5 {
+            color: #ffffff;
+        }
+
+        .info-card p {
+            color: #d1d5db;
+        }
+
+        .btn {
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 30px;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #a71d2a;
+        }
+
         .btn-info {
-            background-color: #17a2b8 !important;
+            background-color: #17a2b8;
+        }
+
+        .btn-info:hover {
+            background-color: #117a8b;
+        }
+
+        @media (max-width: 768px) {
+            .info-card {
+                padding: 15px;
+            }
+
+            .btn {
+                padding: 8px 15px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center text-light">Session Information</h1>
-        <div class="card info-card border-light">
-            <div class="card-body">
-                <h5 class="card-title">Spot Information</h5>
-                <p class="card-text"><strong>End Time:</strong> {{ end }}</p>
-                <p class="card-text"><strong>Floor:</strong> {{ floor }}</p>
-                <p class="card-text"><strong>Building:</strong> {{ building }}</p>
-                <p class="card-text"><strong>Spot Number:</strong> {{ spot_number }}</p>
-                <div class="btn-container">
-                    <a href="/stop" class="btn btn-danger" style="background-color: #dc3545;">Stop Booking</a>
-                    <a href="/info/en" class="btn btn-info">Information</a>
+    <div class="container mt-4">
+        <!-- Шапка -->
+        <div class="header-row">
+            <div class="header-title">Session Info</div>
+        </div>
+
+        <!-- Карточка информации -->
+        <div class="card-container">
+            <div class="info-card p-4">
+                <h5 class="card-title text-center">Spot Information</h5>
+                <hr style="background-color: #444b54;">
+                <p><strong>End Time:</strong> {{ end }}</p>
+                <p><strong>Floor:</strong> {{ floor }}</p>
+                <p><strong>Building:</strong> {{ building }}</p>
+                <p><strong>Spot Number:</strong> {{ spot_number }}</p>
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="/stop" class="btn btn-danger" role="button">Stop Booking</a>
+                    <a href="/session/change" class="btn btn-info" role="button">Change Session</a>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

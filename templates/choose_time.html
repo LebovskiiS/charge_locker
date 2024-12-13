@@ -8,38 +8,67 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Основной стиль */
         body {
-            background-color: #222222;
-            color: #ffffff;
+            background-color: #1c1f26;
+            color: #e2e2e2;
             font-family: 'Arial', sans-serif;
         }
 
-        h1 {
-            margin-bottom: 40px;
-            font-size: 2.5rem;
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #444b54;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
         }
 
-        .form-group label {
+        .title {
+            font-size: 2rem;
             font-weight: bold;
+            color: #f8f9fa;
+            letter-spacing: 0.5px;
         }
 
-        .btn-success {
-            margin-top: 20px;
+        .instruction-btn {
+            display: inline-block;
             background-color: #17a2b8;
-            border-color: #17a2b8;
-            color: #ffffff;
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 30px;
+            transition: transform 0.3s, background-color 0.3s;
+            text-decoration: none;
         }
 
-        .btn-success:hover {
-            background-color: #17a2b8;
-            border-color: #17a2b8;
+        .instruction-btn:hover {
+            transform: translateY(-3px);
+            background-color: #117a8b;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #444b54;
+            border-radius: 8px;
+            background-color: #222830;
+        }
+
+        .form-container label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #f8f9fa;
         }
 
         .form-control {
             background-color: #495057;
             border: 1px solid #ced4da;
             color: #ffffff;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .form-control:focus {
@@ -48,50 +77,78 @@
             box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
         }
 
-        .option-tooltip-time {
-            display: inline-block;
+        .btn-success {
+            margin-top: 20px;
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+            color: #ffffff;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        .option-tooltip-plus {
-            display: inline-block;
-            color: rgba(255, 255, 255, 0.7);
-            float: right;
+        .btn-success:hover {
+            background-color: #158394;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 576px) {
+            .title {
+                font-size: 1.8rem;
+            }
+
+            .form-container {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .btn-success {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">Select Time</h1>
-        <form id="booking-form" method="post" action="/submit">
-            <input type="hidden" name="spot_id" value="{{ spot_id }}">
-            <input type="hidden" name="floor" value="{{ floor }}">
-            <input type="hidden" name="building" value="{{ building }}">
-            <input type="hidden" name="spot_number" value="{{ spot_number }}">
+    <div class="container mt-4">
+        <!-- Шапка -->
+        <div class="header-row">
+            <div class="title">Select Time</div>
+            <a href="/info/instructions" class="instruction-btn">Instructions</a>
+        </div>
 
-            <div class="form-group">
-                <label for="time_start">Start Time:</label>
-                <input type="text" id="time_start" name="time_start" class="form-control" required>
-            </div>
+        <div class="form-container">
+            <form id="booking-form" method="post" action="/submit">
+                <!-- Скрытые поля -->
+                <input type="hidden" name="spot_id" value="{{ spot_id }}">
+                <input type="hidden" name="floor" value="{{ floor }}">
+                <input type="hidden" name="building" value="{{ building }}">
+                <input type="hidden" name="spot_number" value="{{ spot_number }}">
 
-            <div class="form-group">
-                <label for="time_end">End Time:</label>
-                <select id="time_end" name="time_end" class="form-control" required></select>
-            </div>
+                <!-- Поле Start Time -->
+                <div class="form-group">
+                    <label for="time_start">Start Time:</label>
+                    <input type="text" id="time_start" name="time_start" class="form-control" required>
+                </div>
 
-            <button type="submit" class="btn btn-success btn-block">Confirm Booking</button>
-        </form>
+                <!-- Dropdown End Time -->
+                <div class="form-group">
+                    <label for="time_end">End Time:</label>
+                    <select id="time_end" name="time_end" class="form-control" required></select>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-block">Confirm Booking</button>
+            </form>
+        </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var now = new Date();
             var hours = now.getHours();
             var minutes = now.getMinutes();
             var period = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12; // Convert to 12-hour format
+            hours = hours % 12 || 12; // Преобразование в 12-часовой формат
             var currentTime = `${hours}:${String(minutes).padStart(2, '0')} ${period}`;
             document.getElementById('time_start').value = currentTime;
 
@@ -106,48 +163,56 @@
         function generateEndTimeOptions(currentDateTime) {
             var timeStart = document.getElementById('time_start').value;
             var timeEndSelect = document.getElementById('time_end');
-            timeEndSelect.innerHTML = ''; // Clear previous options
+            timeEndSelect.innerHTML = ''; // Очистить старые опции
 
             if (!timeStart) return;
 
             var [time, period] = timeStart.split(' ');
             var [startHour, startMinute] = time.split(':').map(Number);
-
             if (period === 'PM' && startHour !== 12) {
                 startHour += 12;
             } else if (period === 'AM' && startHour === 12) {
                 startHour = 0;
             }
 
-            var maxBookingHours = currentDateTime.getHours() >= 17 ? (24 - startHour) + 10 : 15; // Max booking duration in hours
-            var optionElements = [];
+            // Перевести начальное время на ближайшее кратное 5 минут
+            startMinute = Math.ceil(startMinute / 5) * 5;
 
-            for (var i = 1; i <= maxBookingHours * 4; i++) { // 4 steps per hour (15 min intervals)
-                startMinute += 15;
-                if (startMinute >= 60) {
-                    startHour += 1;
-                    startMinute -= 60;
+            var bookingStartHour = startHour + 2; // Минимум через 2 часа
+            var bookingStartMinute = startMinute;
+            var totalHours = 16; // Максимум до +16 часов
+            var step = 5;
+
+            for (var i = 0; i <= totalHours * (60 / step); i++) {
+                bookingStartMinute += step; // Увеличиваем на шаг (5 минут)
+                if (bookingStartMinute >= 60) {
+                    bookingStartMinute -= 60;
+                    bookingStartHour += 1;
                 }
-                if (startHour >= 24) {
-                    startHour -= 24;
+                if (bookingStartHour >= 24) {
+                    bookingStartHour -= 24;
                 }
 
-                var displayPeriod = startHour >= 12 ? 'PM' : 'AM';
-                var displayHour = startHour % 12 || 12;
-                var displayMinute = String(startMinute).padStart(2, '0');
+                var displayPeriod = bookingStartHour >= 12 ? 'PM' : 'AM';
+                var displayHour = bookingStartHour % 12 || 12;
+                var displayMinute = String(bookingStartMinute).padStart(2, '0');
                 var displayTime = `${displayHour}:${displayMinute} ${displayPeriod}`;
-                var minutesToAdd = i * 15;
-                var tooltipText = minutesToAdd >= 60
-                    ? `+${Math.floor(minutesToAdd / 60)}hr ${minutesToAdd % 60}min`
-                    : `+${minutesToAdd}min`;
 
+                // Вычислить время, прошедшее с начала бронирования
+                var totalMinutesFromStart = 120 + i * step; // +2 часа минимального времени
+                var hoursFromStart = Math.floor(totalMinutesFromStart / 60);
+                var minutesFromStart = totalMinutesFromStart % 60;
+
+                var tooltipText = hoursFromStart > 0
+                    ? `+${hoursFromStart} hr ${minutesFromStart > 0 ? minutesFromStart + " min" : ""}`
+                    : `+${minutesFromStart} min`;
+
+                // Создать элемент option
                 var option = document.createElement('option');
-                option.value = displayTime; // Save value in 12-hour format
-                option.innerHTML = `<span class="option-tooltip-time">${displayTime}</span><span class="option-tooltip-plus">${tooltipText}</span>`;
-                optionElements.push(option);
+                option.value = displayTime; // Значение времени
+                option.textContent = `${displayTime} (${tooltipText})`; // Отображение времени и подсказки
+                timeEndSelect.appendChild(option);
             }
-
-            optionElements.forEach(option => timeEndSelect.appendChild(option));
         }
     </script>
 </body>
