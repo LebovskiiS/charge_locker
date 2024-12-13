@@ -59,35 +59,29 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Сначала отображаем занятые слоты -->
-                {% for spot in booked_spots %}
-                <tr>
-                    <td>{{ spot.building }}</td>
-                    <td>{{ spot.floor }}</td>
-                    <td>{{ spot.spot_number }}</td>
-                    <td>
-                        {{ spot.end_time or "N/A" }}
-                    </td>
-                </tr>
-                {% endfor %}
+    <!-- Отображаем забронированные споты -->
+    {% for spot in booked_spots %}
+    <tr>
+        <td>{{ spot.building }}</td>
+        <td>{{ spot.floor }}</td>
+        <td>{{ spot.spot_number }}</td>
+        <td>
+            <span class="text-warning">Booked until {{ spot.end_time }}</span>
+        </td>
+    </tr>
+    {% endfor %}
 
-                <!-- Затем отображаем доступные слоты -->
-                {% for spot in available_spots %}
-                <tr>
-                    <td>{{ spot.building }}</td>
-                    <td>{{ spot.floor }}</td>
-                    <td>{{ spot.spot_number }}</td>
-                    <td>
-                        <a class="btn btn-primary" href="/time/{{ spot.ID }}">
-                            Book Spot
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <!-- Отображаем доступные споты -->
+    {% for spot in available_spots %}
+    <tr>
+        <td>{{ spot.building }}</td>
+        <td>{{ spot.floor }}</td>
+        <td>{{ spot.spot_number }}</td>
+        <td>
+            <a class="btn btn-primary" href="/time/{{ spot.ID }}">
+                Book Spot
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>

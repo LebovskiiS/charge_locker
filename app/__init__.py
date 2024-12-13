@@ -16,4 +16,5 @@ def _jinja2_filter_datetime(date, fmt=None):
         fmt = '%I:%M%p'  # Default format
     return date.strftime(fmt)
 
+print('return from delete old sessions', db.delete_old_sessions())
 

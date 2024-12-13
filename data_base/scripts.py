@@ -1,14 +1,15 @@
 
 
-sessions_db = (
-    'CREATE TABLE IF NOT EXISTS sessions ('
-    'ID INTEGER PRIMARY KEY AUTOINCREMENT, '
-    'spot_id INTEGER NOT NULL, '
-    'start INTEGER NOT NULL, '
-    'end INTEGER DEFAULT NULL, '
-    'token TEXT NOT NULL,'
-    'FOREIGN KEY(spot_id) REFERENCES spots(ID))'
-)
+sessions_db = """
+CREATE TABLE IF NOT EXISTS sessions (
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    spot_id INTEGER NOT NULL,
+    start INTEGER NOT NULL,  -- UNIX timestamp
+    end INTEGER DEFAULT NULL,  -- UNIX timestamp
+    token TEXT NOT NULL,
+    FOREIGN KEY(spot_id) REFERENCES spots(ID)
+);
+"""
 
 spots_db = (
     'CREATE TABLE IF NOT EXISTS spots ('

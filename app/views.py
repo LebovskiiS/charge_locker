@@ -9,18 +9,25 @@ from .decorators import check_token, delete_old_sessions
 from app.logs import loger
 
 
-def time_to_db_format(date_str, time_str):
-    datetime_obj = datetime.strptime(f"{date_str} {time_str}", '%Y-%m-%d %I:%M %p')
-    return datetime_obj.strftime('%Y-%m-%d %I:%M %p')
+def time_to_db_format(date_str: str, time_str: str) -> str:
+    try:
+        datetime_obj = datetime.strptime(f"{date_str} {time_str}", '%Y-%m-%d %I:%M %p')
+        return datetime_obj.strftime('%Y-%m-%d %I:%M %p')
+    except Exception as e:
+        loger.error(f"Error parsing date/time: {e}")
+        raise e
+
+
+def full_time_to_12_hour_format(datetime_str: str) -> str:
+    try:
+        datetime_obj = datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
+        return datetime_obj.strftime('%I:%M %p')
+    except Exception as e:
+        loger.error(f"Error converting time to 12-hour format: {e}")
+        raise e
 
 
 
-def full_time_to_12_hour_format(datetime_str):
-    datetime_obj = datetime.strptime(datetime_str, '%Y-%m-%d %I:%M %p')
-    return datetime_obj.strftime('%I:%M %p')
-
-
-@delete_old_sessions
 @check_token
 def main_view():
     loger.debug('main func started token found')
@@ -40,18 +47,48 @@ def main_view():
     )
 
 
+
+
+@delete_old_sessions
 def get_spots_view():
-    all_spots = db.get_all_spots()
-    print("All spots:", all_spots)
+    try:
+        all_spots = db.get_all_spots()  # Получение всех мест из базы
 
-    # Разделяем споты на занятые и свободные
-    booked_spots = [spot for spot in all_spots if spot['end_time']]
-    available_spots = [spot for spot in all_spots if not spot['end_time']]
+        # Разделение мест: занятые и доступные
+        booked_spots = []
+        available_spots = []
 
-    # Сортируем занятые споты по `end_time` (если нет времени окончания, оно игнорируется)
-    booked_spots.sort(key=lambda spot: spot['end_time'])
+        for spot in all_spots:
+            if spot['end_time']:  # Если место занято (end_time не равно None)
+                try:
+                    # Преобразуем `end_time` из UNIX timestamp в `datetime`
+                    end_time_obj = datetime.fromtimestamp(spot['end_time'])
 
-    return render_template('spots.html', available_spots=available_spots, booked_spots=booked_spots)
+                    # Сохраняем форматированное время для отображения (12-часовой формат)
+                    spot['end_time'] = end_time_obj.strftime('%I:%M %p')
+                    spot['end_time_obj'] = end_time_obj  # Для сортировки ниже
+
+                    booked_spots.append(spot)
+                except Exception as inner_e:
+                    loger.error(f"Error parsing end_time for spot {spot['ID']}: {inner_e}")
+            else:  # Если место доступно
+                available_spots.append(spot)
+
+        # Сортировка: занятые места по времени окончания (end_time)
+        booked_spots.sort(key=lambda spot: spot['end_time_obj'])
+
+        # Оставляем только 3 ближайших занятых места
+        booked_spots = booked_spots[:3]
+
+        return render_template(
+            'spots.html',
+            available_spots=available_spots,
+            booked_spots=booked_spots
+        )
+    except Exception as e:
+        loger.error(f"Error in get_spots_view: {e}")
+        return f"Error: {e}"
+
 
 
 def choose_time_view(spot_id):
