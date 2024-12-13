@@ -3,7 +3,7 @@ from flask import Flask, request
 from functools import wraps
 from .controllers import get_session_by_token_controller, is_available_controller
 from datetime import datetime
-from app.logs import loger
+from app.logs import logger
 from app import db
 
 def check_token(func):
@@ -11,10 +11,10 @@ def check_token(func):
     def wrapped(*args, **kwargs):
         token = request.cookies.get('jwt')
         if get_session_by_token_controller(token):
-            loger.debug('token found')
+            logger.debug('token found')
             return func(*args, **kwargs)
         else:
-            loger.debug('token checked not found, return /spots')
+            logger.debug('token checked not found, return /spots')
             return redirect('/spots')
 
     return wrapped

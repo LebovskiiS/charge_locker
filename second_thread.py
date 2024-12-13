@@ -1,7 +1,7 @@
 import threading
 import time
 from app import db
-from app.logs import loger
+from app.logs import logger
 
 
 

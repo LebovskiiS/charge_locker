@@ -1,7 +1,7 @@
 import sqlite3
 from .scripts import sessions_db, spots_db, show_spots
 from config import WORK_DIRECTORY
-from app.logs import loger
+from app.logs import logger
 from datetime import datetime
 
 def full_time_to_12_hour_format(datetime_str):
@@ -107,22 +107,19 @@ class Database:
 
     def book_spot(self, token, spot_id, start, end):
         try:
-            # Преобразуем время в UNIX timestamp
             start_timestamp = int(datetime.strptime(start, '%Y-%m-%d %I:%M %p').timestamp())
             end_timestamp = int(datetime.strptime(end, '%Y-%m-%d %I:%M %p').timestamp())
 
-            # Обновляем доступность спота и создаем сессию
             self.cursor.execute('UPDATE spots SET is_available = 0 WHERE ID = ?', (spot_id,))
             self.cursor.execute(
                 'INSERT INTO sessions (start, end, token, spot_id) VALUES (?, ?, ?, ?)',
                 (start_timestamp, end_timestamp, token, spot_id)
             )
             self.connection.commit()
-
             return self.cursor.lastrowid
         except sqlite3.Error as e:
             self.connection.rollback()
-            loger.error(f"Error booking spot: {e}")
+            logger.error(f"Error booking spot: {e}")
             raise e
 
 
@@ -152,29 +149,30 @@ class Database:
 
     def stop_booking(self, token):
         try:
+            # Получаем ID спота
             spot_id = self.cursor.execute(
                 'SELECT spot_id FROM sessions WHERE token = ?',
                 (token,)
             ).fetchone()
 
             if not spot_id:
-                loger.debug(f"No session found for token: {token}")
+                logger.debug(f"No session found for token: {token}")
                 return 'not found'
 
+            # Обновляем доступность спота и удаляем сессию в одной транзакции
             self.cursor.execute(
                 'UPDATE spots SET is_available = 1 WHERE ID = ?',
                 (spot_id[0],)
             )
-            self.connection.commit()
             self.cursor.execute('DELETE FROM sessions WHERE token = ?', (token,))
             self.connection.commit()
-
-            loger.debug(f"Spot {spot_id[0]} released and session deleted for token: {token}")
+            logger.debug(f"Spot {spot_id[0]} released and session deleted for token: {token}")
             return 'ok'
         except sqlite3.Error as e:
-            loger.error(f"Error stopping booking: {e}")
             self.connection.rollback()
+            logger.error(f"Error stopping booking: {e}")
             return 'error'
+
 
     def get_session_by_token(self, token):
         self.cursor.execute('SELECT * FROM sessions WHERE token = ?', [token])
@@ -196,7 +194,7 @@ class Database:
 
     def delete_old_sessions(self):
         try:
-            loger.debug("Starting to delete old sessions")
+            logger.debug("Starting to delete old sessions")
 
             # Удаляем сессии с устаревшей датой `end`
             expired_sessions = self.cursor.execute(
@@ -204,7 +202,7 @@ class Database:
             ).fetchall()
 
             if not expired_sessions:
-                loger.debug("No expired sessions found.")
+                logger.debug("No expired sessions found.")
                 return
 
             # Удаляем старые записи сессий
@@ -221,8 +219,14 @@ class Database:
                 )
 
             self.connection.commit()
-            loger.debug(f"{len(expired_sessions)} expired sessions deleted.")
+            logger.debug(f"{len(expired_sessions)} expired sessions deleted.")
         except sqlite3.Error as e:
             self.connection.rollback()
-            loger.error(f"Error deleting old sessions: {e}")
+            logger.error(f"Error deleting old sessions: {e}")
+
+
+    
+
+
+
 
