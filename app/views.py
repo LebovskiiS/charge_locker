@@ -52,42 +52,42 @@ def main_view():
 @delete_old_sessions
 def get_spots_view():
     try:
-        all_spots = db.get_all_spots()  # Получение всех мест из базы
+        all_spots = db.get_all_spots()
 
-        # Разделение мест: занятые и доступные
         booked_spots = []
         available_spots = []
 
         for spot in all_spots:
-            if spot['end_time']:  # Если место занято (end_time не равно None)
+            if spot['end_time']:
                 try:
-                    # Преобразуем `end_time` из UNIX timestamp в `datetime`
                     end_time_obj = datetime.fromtimestamp(spot['end_time'])
-
-                    # Сохраняем форматированное время для отображения (12-часовой формат)
                     spot['end_time'] = end_time_obj.strftime('%I:%M %p')
-                    spot['end_time_obj'] = end_time_obj  # Для сортировки ниже
-
+                    spot['end_time_obj'] = end_time_obj
                     booked_spots.append(spot)
                 except Exception as inner_e:
                     loger.error(f"Error parsing end_time for spot {spot['ID']}: {inner_e}")
-            else:  # Если место доступно
+            else:
                 available_spots.append(spot)
 
-        # Сортировка: занятые места по времени окончания (end_time)
         booked_spots.sort(key=lambda spot: spot['end_time_obj'])
 
-        # Оставляем только 3 ближайших занятых места
         booked_spots = booked_spots[:3]
 
-        return render_template(
-            'spots.html',
-            available_spots=available_spots,
-            booked_spots=booked_spots
-        )
+        spots_grouped = {}
+        for spot in available_spots:
+            building = spot["building"]
+            floor = spot["floor"]
+            if building not in spots_grouped:
+                spots_grouped[building] = {}
+            if floor not in spots_grouped[building]:
+                spots_grouped[building][floor] = {"available": []}
+            spots_grouped[building][floor]["available"].append(spot)
+
+        return render_template('spots.html', booked_spots=booked_spots, spots_grouped=spots_grouped)
     except Exception as e:
         loger.error(f"Error in get_spots_view: {e}")
         return f"Error: {e}"
+
 
 
 
