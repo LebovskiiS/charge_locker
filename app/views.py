@@ -76,47 +76,36 @@ def main_view():
 @delete_old_sessions
 def get_spots_view():
     try:
-        all_spots = db.get_all_spots()  # Извлекаем все споты из базы данных
+        all_spots = db.get_all_spots()  # Данные из базы
 
         booked_spots = []
         available_spots = []
 
-        for spot in all_spots:
-            if spot['end_time']:  # Если есть время окончания брони
-                try:
-                    # Преобразуем время из UNIX timestamp в читаемый формат
-                    end_time_obj = datetime.fromtimestamp(spot['end_time'])
-                    spot['end_time'] = end_time_obj.strftime('%I:%M %p')  # Пример: "04:30 PM"
-                    spot['end_time_obj'] = end_time_obj  # Сохраняем объект datetime для сортировки
-                    booked_spots.append(spot)
-                except (ValueError, TypeError) as inner_e:  # В случае некорректного времени
-                    logger.error(f"Error parsing end_time for spot {spot['ID']}: {inner_e}")
-            else:
+        for spot in all_spots:  # Разбиваем точки на группы
+            if spot['end_time']:  # Если время окончания существует
+                booked_spots.append(spot)
+            else:  # Если доступен
                 available_spots.append(spot)
 
-        # Сортируем забронированные споты по времени окончания
-        booked_spots.sort(key=lambda spot: spot['end_time_obj'])
+        # Добавляем сортировку на основе времени окончания бронирования
+        booked_spots.sort(key=lambda x: x['end_time'] if x['end_time'] else '')
 
-        # Ограничиваем список из 3 записей
-        booked_spots = booked_spots[:3]
-
-        # Группируем доступные споты по зданию и этажу
+        # Отображаем в удобном виде (например, группы по зданию)
         spots_grouped = {}
         for spot in available_spots:
-            building = spot["building"]
-            floor = spot["floor"]
-            # Создаем вложенные словари, если их еще нет
+            building = spot['building']
+            floor = spot['floor']
             if building not in spots_grouped:
                 spots_grouped[building] = {}
             if floor not in spots_grouped[building]:
                 spots_grouped[building][floor] = {"available": []}
             spots_grouped[building][floor]["available"].append(spot)
 
-        # Передаем данные в шаблон
         return render_template('spots.html', booked_spots=booked_spots, spots_grouped=spots_grouped)
     except Exception as e:
         logger.error(f"Error in get_spots_view: {e}")
         return f"Error: {e}"
+
 
 
 
@@ -135,23 +124,25 @@ def choose_time_view(spot_id):
 def submit_view():
     token = create_token()
     spot_id = request.form.get('spot_id')
-    start_12_hour = request.form.get('time_start')  # В 12-часовом формате ('4:30 PM')
-    end_12_hour = request.form.get('time_end')  # В 12-часовом формате ('6:00 PM')
+    start_12_hour = request.form.get('time_start')  # Пример: "4:30 PM"
+    end_12_hour = request.form.get('time_end')  # Пример: "6:00 PM"
 
-    # Создаем текущую дату для включения в datetime формат записи
+    # Текущая дата для записи
     current_date = datetime.now().strftime('%Y-%m-%d')
 
-    # Преобразуем в формат для хранения в базе данных
-    start_db_format = time_to_db_format(current_date, start_12_hour)
-    end_db_format = time_to_db_format(current_date, end_12_hour)
+    # Форматируем время для записи в базу
+    start_db_format = f"{current_date} {start_12_hour}"
+    end_db_format = f"{current_date} {end_12_hour}"
 
     try:
-        submit_controller(token, spot_id, start_db_format, end_db_format)
+        db.book_spot(token, spot_id, start_db_format, end_db_format)
         resp = redirect('/')
-        resp.set_cookie(key='jwt', value=token, max_age=60 * 60 * 16)
+        resp.set_cookie(key='jwt', value=token, max_age=60 * 60 * 16)  # Примерно 16 часов
         return resp
     except Exception as e:
-        return f'something went wrong: {e}'
+        logger.error(f"Error submitting view: {e}")
+        return f"Something went wrong: {e}"
+
 
 
 @check_token

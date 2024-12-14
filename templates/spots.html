@@ -12,7 +12,7 @@
             background: linear-gradient(135deg, #1e2026, #292c35);
             color: #e2e2e2;
             font-family: 'Roboto', sans-serif;
-            margin: 0; /* Убираем все возможные отступы страницы */
+            margin: 0;
             padding: 0;
         }
 
@@ -63,14 +63,14 @@
 
         /* Обёртка таблицы */
         .table-wrapper {
-            position: relative; /* Нужен для sticky */
-            max-height: 700px; /* Ограничиваем высоту таблицы */
-            overflow-y: auto; /* Добавляем вертикальную прокрутку */
+            position: relative;
+            max-height: 700px;
+            overflow-y: auto;
             background: linear-gradient(90deg, #1e2126, #25292f);
             border-radius: 10px;
-            padding: 0; /* Убираем padding */
+            padding: 0;
             box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
-            margin: 0; /* Убираем лишние внешние отступы */
+            margin: 0;
         }
 
         /* Таблица */
@@ -78,29 +78,23 @@
             border-collapse: collapse;
             width: 100%;
             table-layout: fixed;
-            margin: 0; /* Убираем лишние отступы */
+            margin: 0;
             border-spacing: 0;
         }
 
-        /* Полная фиксация липкого заголовка */
+        /* Фиксация заголовка */
         thead th {
-            position: sticky; /* Делаем заголовок липким */
-            top: 0; /* Приклеиваем к самому верху `.table-wrapper` */
-            z-index: 100; /* Гарантируем приоритет */
+            position: sticky;
+            top: 0;
+            z-index: 100;
             background-color: #343a40;
             color: #ffffff;
             text-align: left;
             font-size: 0.9rem;
             padding: 12px;
-            margin: 0; /* Убираем любые внешние отступы */
-            border: none; /* Убираем границы */
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Убираем погрешности отступов */
-        thead {
             margin: 0;
-            padding: 0;
+            border: none;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         tbody tr.group-row {
@@ -197,12 +191,11 @@
         <div class="header-row">
             <div>
                 <div class="title">CHARGER LOCKER</div>
-                <div class="address">2100 Sullivan, Irvine</div>
+                <div class="address">Metropolis, Irvine</div>
             </div>
             <a class="instruction-btn" href="/info/en">View Instructions</a>
         </div>
 
-        <!-- Таблица -->
         <div class="table-wrapper">
             <table class="table table-striped table-hover">
                 <thead>
@@ -225,7 +218,10 @@
                             <td>{{ spot.floor }}</td>
                             <td class="text-center">{{ spot.spot_number }}</td>
                             <td class="text-center">
-                                <span class="text-warning">Booked until {{ spot.end_time }}</span>
+                                <!-- Выводим только время -->
+                                <span class="text-warning">
+                                    Available in {{ spot.end_time.split(' ')[1] ~ ' ' ~ spot.end_time.split(' ')[2] if spot.end_time else 'N/A' }}
+                                </span>
                             </td>
                         </tr>
                         {% endfor %}
