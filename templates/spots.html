@@ -6,195 +6,194 @@
     <title>CHARGER LOCKER</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #1c1f26;
+            background: linear-gradient(135deg, #1e2026, #292c35);
             color: #e2e2e2;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
+            margin: 0; /* Убираем все возможные отступы страницы */
+            padding: 0;
         }
 
-        /* Заголовки и верхние элементы */
+        /* Заголовок страницы */
         .header-row {
             display: flex;
-            justify-content: space-between; /* Заботимся о симметрии */
-            align-items: center;          /* Вертикально центрируем */
-            border-bottom: 2px solid #444b54;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10px;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, #343a40, #1c1f26);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
         }
 
         .title {
-            font-size: 2rem;
+            font-size: 2.4rem;
             font-weight: bold;
             color: #f8f9fa;
-            letter-spacing: 0.5px;
+            text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.4);
         }
 
         .address {
-            font-size: 0.9rem;
-            font-weight: lighter;
+            font-size: 1rem;
+            font-weight: 300;
             color: #aaa;
             text-align: right;
             margin-top: 5px;
         }
 
         .instruction-btn {
-            display: inline-block;
-            background-color: #17a2b8;
+            background: linear-gradient(135deg, #17a2b8, #138496);
             border: none;
             color: white;
-            font-size: 0.9rem;
-            font-weight: bold;
-            padding: 8px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 10px 25px;
             border-radius: 30px;
-            transition: transform 0.3s, background-color 0.3s;
             text-decoration: none;
-            margin-top: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
         }
 
         .instruction-btn:hover {
-            transform: translateY(-3px);
-            background-color: #117a8b;
+            transform: scale(1.05) translateY(-3px);
+            background: linear-gradient(135deg, #138496, #117a8b);
         }
 
-        /* Таблица и стили для неё */
+        /* Обёртка таблицы */
+        .table-wrapper {
+            position: relative; /* Нужен для sticky */
+            max-height: 700px; /* Ограничиваем высоту таблицы */
+            overflow-y: auto; /* Добавляем вертикальную прокрутку */
+            background: linear-gradient(90deg, #1e2126, #25292f);
+            border-radius: 10px;
+            padding: 0; /* Убираем padding */
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+            margin: 0; /* Убираем лишние внешние отступы */
+        }
+
+        /* Таблица */
         table {
             border-collapse: collapse;
             width: 100%;
+            table-layout: fixed;
+            margin: 0; /* Убираем лишние отступы */
+            border-spacing: 0;
         }
 
+        /* Полная фиксация липкого заголовка */
         thead th {
-            position: sticky;
-            top: 0;
-            z-index: 2;
-            background-color: #222831;
+            position: sticky; /* Делаем заголовок липким */
+            top: 0; /* Приклеиваем к самому верху `.table-wrapper` */
+            z-index: 100; /* Гарантируем приоритет */
+            background-color: #343a40;
             color: #ffffff;
-            text-align: center;
-            font-size: 0.85rem;
-            border-bottom: 2px solid #666;
-            padding: 10px;
+            text-align: left;
+            font-size: 0.9rem;
+            padding: 12px;
+            margin: 0; /* Убираем любые внешние отступы */
+            border: none; /* Убираем границы */
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Убираем погрешности отступов */
+        thead {
+            margin: 0;
+            padding: 0;
         }
 
         tbody tr.group-row {
             background-color: #333a40;
-            text-align: center;
+            text-align: left;
             font-weight: bold;
             color: #17a2b8;
             font-size: 1rem;
+            padding-left: 15px;
         }
 
         tbody tr.floor-row {
             background-color: #2b2e33;
-            text-align: center;
+            text-align: left;
             font-weight: bold;
             color: #e2df72;
             font-size: 0.95rem;
+            padding-left: 15px;
         }
 
         tbody td {
-            text-align: center;
-            vertical-align: middle;
-            font-size: 0.85rem;
-            padding: 8px;
+            text-align: left;
+            font-size: 0.9rem;
+            padding: 10px 15px;
         }
 
-        .table tbody tr:hover {
-            background-color: #3b4048;
+        tbody td.text-center {
+            text-align: center;
         }
 
         .btn-primary {
-            padding: 8px 15px;
+            background: linear-gradient(135deg, #00b4d8, #0096c7);
+            color: #fff;
             font-size: 0.85rem;
             font-weight: bold;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
         }
 
         .btn-primary:hover {
-            background-color: #0056b3;
+            background: linear-gradient(135deg, #0077b6, #023e8a);
+            transform: translateY(-2px);
         }
 
         .text-warning {
             font-weight: bold;
+            color: #f4d03f !important;
         }
 
-        .table-wrapper {
-            max-height: 700px;
-            overflow-y: auto;
-            border: 1px solid #444b54;
-            border-radius: 5px;
+        tbody tr:hover {
+            background-color: #3b4048;
         }
 
         @media (max-width: 768px) {
-            .title {
-                font-size: 1.8rem;
-            }
-
-            .address {
-                font-size: 0.8rem;
-                margin-top: 3px;
-            }
-
-            .instruction-btn {
+            thead th, tbody td {
+                padding: 8px;
                 font-size: 0.85rem;
-                padding: 8px 15px;
-            }
-
-            table {
-                font-size: 0.85rem;
-            }
-
-            thead th {
-                font-size: 0.8rem;
-            }
-
-            tbody td {
-                font-size: 0.8rem;
-                padding: 5px;
             }
 
             .btn-primary {
                 font-size: 0.75rem;
-                padding: 5px 10px;
+                padding: 6px 12px;
             }
         }
 
         @media (max-width: 480px) {
             .header-row {
-                flex-direction: column; /* Перестраиваем заголовок на вертикальный вид */
-                align-items: flex-start; /* Заголовок и кнопка выравниваются влево */
-            }
-
-            .address {
-                font-size: 0.75rem;
-                text-align: left; /* Становится влево на маленьких устройствах */
-            }
-
-            .instruction-btn {
-                max-width: 100%; /* Растягивается на ширину */
-                margin-top: 8px;
+                flex-direction: column;
+                align-items: flex-start;
             }
 
             .title {
-                font-size: 1.5rem;
-                margin-bottom: 5px;
+                font-size: 1.8rem;
             }
 
-            thead th, tbody td {
-                padding: 5px;
-                font-size: 0.75rem;
+            .address {
+                text-align: left;
+                font-size: 0.8rem;
+                margin-top: 5px;
             }
 
-            .btn-primary {
-                font-size: 0.7rem;
-                padding: 5px 10px;
-                display: block;
-                margin: 0 auto;
+            .instruction-btn {
+                max-width: 100%;
+                padding: 10px 20px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container mt-4">
-        <!-- Заголовок и кнопка инструкции -->
         <div class="header-row">
             <div>
                 <div class="title">CHARGER LOCKER</div>
@@ -210,8 +209,8 @@
                     <tr>
                         <th>Building</th>
                         <th>Floor</th>
-                        <th>Spot Number</th>
-                        <th>Status / Action</th>
+                        <th class="text-center">Spot Number</th>
+                        <th class="text-center">Status / Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -224,15 +223,15 @@
                         <tr>
                             <td>{{ spot.building }}</td>
                             <td>{{ spot.floor }}</td>
-                            <td>{{ spot.spot_number }}</td>
-                            <td>
+                            <td class="text-center">{{ spot.spot_number }}</td>
+                            <td class="text-center">
                                 <span class="text-warning">Booked until {{ spot.end_time }}</span>
                             </td>
                         </tr>
                         {% endfor %}
                     {% endif %}
 
-                    <!-- Доступные места с разбиением по Building и Floor -->
+                    <!-- Доступные места -->
                     {% for building, floors in spots_grouped.items() %}
                         <tr class="group-row">
                             <td colspan="4">Building {{ building }}</td>
@@ -245,8 +244,8 @@
                             <tr>
                                 <td>{{ spot.building }}</td>
                                 <td>{{ spot.floor }}</td>
-                                <td>{{ spot.spot_number }}</td>
-                                <td>
+                                <td class="text-center">{{ spot.spot_number }}</td>
+                                <td class="text-center">
                                     <a class="btn btn-primary btn-sm" href="/time/{{ spot.ID }}">Book Spot</a>
                                 </td>
                             </tr>

@@ -4,17 +4,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charging Station App Rules</title>
+    <title>Rules for Using Charger Locker App</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #343a40;
-            color: #ffffff;
+            background: linear-gradient(135deg, #1e2026, #292c35);
+            color: #e2e2e2;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
             margin-top: 2rem;
+        }
+
+        .language-buttons a {
+            margin-right: 5px;
+        }
+
+        .card {
+            background: linear-gradient(90deg, #1e2126, #25292f);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #d1d5db;
+        }
+
+        .card-text a {
+            color: #17a2b8;
+            transition: color 0.3s ease;
+        }
+
+        .card-text a:hover {
+            color: #138496;
         }
 
         .btn-container {
@@ -23,8 +59,47 @@
             margin-top: 2rem;
         }
 
-        .language-buttons a {
-            margin-right: 5px;
+        .btn {
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 10px 25px;
+            border-radius: 30px;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #218838);
+            border: none;
+            color: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838, #1e7e34);
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            border: none;
+            color: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-info:hover {
+            background: linear-gradient(135deg, #117a8b, #0f718a);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .btn-container {
+                flex-direction: column;
+            }
+
+            .btn-container .btn {
+                margin-bottom: 10px;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -37,28 +112,31 @@
             <a href="/info/ru" class="btn btn-light btn-sm">РУ</a>
             <a href="/info/fa" class="btn btn-light btn-sm">فا</a>
         </div>
-        <div class="card bg-dark text-light">
+
+        <div class="card">
             <div class="card-body">
-                <h1 class="card-title text-center">Charging Station App Rules</h1>
-                <p class="card-text">This app is specifically designed to make life easier for everyone who uses the charging stations in this building. Here are a few rules to help us maximize these functions.</p>
+                <h1 class="card-title text-center">Rules for Using Charger Locker App</h1>
+                <p class="card-text">This application is specifically designed to make life easier for those using charging stations in this building. Here are some rules to help us use these functions as efficiently as possible.</p>
+
                 <ol class="card-text">
-                    <li>As soon as you find a free space, scan the QR code.</li>
+                    <li>When you find a free spot, scan the QR code.</li>
+                    <li>Save this website to your phone's home screen. Tap the <b>share button at the bottom of the screen</b>, then select "Add to Home Screen".</li>
                     <li>Find your spot in the list of available slots (all slots are numbered).</li>
-                    <li>Choose the time for which you would like to book your spot. Please note that if you leave your car overnight to charge, your reservation will be cancelled automatically at 10AM.</li>
-                    <li>When you re-enter the site, your reservation information will be visible.</li>
-                    <li>If you remove your car from the charger before your time has elapsed, you can scan the QR code again and stop the reservation. Then all other users will know that the spot is free.</li>
+                    <li>If you need to modify your booking, on the page with your current reservation info, click "Edit Booking".</li>
+                    <li>When you revisit the website, you'll see information about your active reservation.</li>
+                    <li>If you unplug your car before the reservation ends, you can stop the booking. Then other users will see that the spot is free. If you don't do this, the reservation will automatically expire at the designated time.</li>
+                    <li>If all spots are occupied, the initial page will show you the three spots that will become free the earliest.</li>
                 </ol>
-                <p class="card-text">The app is in testing phase and will be improved. If you notice that the app is not working correctly, please let me know at <a href="tel:8188134957" class="text-light">8188134957</a> or any contact information on my website. At the moment, the developer of this application is looking for a job as a Python Developer. If you would like to get in touch regarding a position, my website is <a href="http://zheliabovskii.info" class="text-light">zheliabovskii.info</a>.</p>
+
+                <p class="card-text">This application is in the testing phase and will be improved. If you notice any bugs or incorrect behavior, please reach out to me via phone at <a href="tel:8188134957" class="text-light">8188134957</a> or using the contact information on my website. Also, the developer of this app is currently seeking a position as a Python Developer. If you have an offer, here's my website: <a href="http://zheliabovskii.info" class="text-light">zheliabovskii.info</a>.</p>
+
                 <div class="btn-container">
-                    <a href="/" class="btn btn-success" style="background-color: #28a745; border-color: #28a745;">I ACCEPT THE RULES</a>
-                    <a href="http://zheliabovskii.info" class="btn btn-info" style="background-color: #17a2b8; border-color: #17a2b8;">About Developer</a>
+                    <a href="/" class="btn btn-success">I ACCEPT THE RULES</a>
+                    <a href="http://zheliabovskii.info" class="btn btn-info">About Developer</a>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

@@ -4,17 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قوانین اپلیکیشن ایستگاه شارژ</title>
+    <title>قوانین برنامه قفل شارژر</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #343a40;
-            color: #ffffff;
+            background: linear-gradient(135deg, #1e2026, #292c35);
+            color: #e2e2e2;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
         }
 
         .container {
             margin-top: 2rem;
+        }
+
+        .language-buttons a {
+            margin-left: 5px;
+        }
+
+        .card {
+            background: linear-gradient(90deg, #1e2126, #25292f);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #d1d5db;
+        }
+
+        .card-text a {
+            color: #17a2b8;
+            transition: color 0.3s ease;
+        }
+
+        .card-text a:hover {
+            color: #138496;
         }
 
         .btn-container {
@@ -23,8 +60,47 @@
             margin-top: 2rem;
         }
 
-        .language-buttons a {
-            margin-right: 5px;
+        .btn {
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 10px 25px;
+            border-radius: 30px;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #218838);
+            border: none;
+            color: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838, #1e7e34);
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            border: none;
+            color: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-info:hover {
+            background: linear-gradient(135deg, #117a8b, #0f718a);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .btn-container {
+                flex-direction: column;
+            }
+
+            .btn-container .btn {
+                margin-bottom: 10px;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -37,28 +113,31 @@
             <a href="/info/ru" class="btn btn-light btn-sm">РУ</a>
             <a href="/info/fa" class="btn btn-light btn-sm">فا</a>
         </div>
-        <div class="card bg-dark text-light">
+
+        <div class="card">
             <div class="card-body">
-                <h1 class="card-title text-center">قوانین اپلیکیشن ایستگاه شارژ</h1>
-                <p class="card-text">این اپلیکیشن به طور خاص طراحی شده است تا زندگی را برای همه کسانی که از ایستگاه‌های شارژ در این ساختمان استفاده می‌کنند، آسان کند. در اینجا چند قانون است که به ما در به حداکثر رساندن این امکانات کمک می‌کند.</p>
+                <h1 class="card-title text-center">قوانین استفاده از برنامه شارژر لاکر</h1>
+                <p class="card-text">این برنامه به طور خاص طراحی شده است تا زندگی را برای کسانی که از ایستگاه‌های شارژ در این ساختمان استفاده می‌کنند راحت‌تر کند. در اینجا چند قانون آورده شده تا بتوانیم از این امکانات به بهترین نحو بهره‌برداری کنیم.</p>
+
                 <ol class="card-text">
-                    <li>به محض پیدا کردن جای خالی، کد QR را اسکن کنید.</li>
-                    <li>جای خود را در لیست سلول های موجود پیدا کنید (همه سلول ها شماره گذاری شده‌اند).</li>
-                    <li>زمانی را که می‌خواهید جایگاه خود را رزرو کنید انتخاب کنید. توجه داشته باشید که اگر ماشین خود را شبانه برای شارژ بگذارید، رزرو شما به طور خودکار در ساعت 10 صبح لغو می‌شود.</li>
-                    <li>هنگامی که دوباره وارد سایت می‌شوید، اطلاعات رزرو شما نمایش داده خواهد شد.</li>
-                    <li>اگر ماشین خود را قبل از اتمام زمان شارژ از شارژر خارج کردید، می‌توانید مجدداً کد QR را اسکن کرده و رزرو را متوقف کنید. سپس همه کاربران دیگر می‌دانند که جایگاه خالی است.</li>
+                    <li>به محض یافتن یک جای خالی، کد QR آن را اسکن کنید.</li>
+                    <li>این وب‌سایت را به صفحه اصلی تلفن خود اضافه کنید. روی <b>دکمه اشتراک‌گذاری در پایین صفحه</b> ضربه بزنید، سپس گزینه "Add to Home Screen" را انتخاب کنید.</li>
+                    <li>جایگاه خود را از فهرست شیارهای موجود پیدا کنید (تمام شیارها شماره‌گذاری شده‌اند).</li>
+                    <li>اگر نیاز به تغییر رزرو دارید، روی صفحه اطلاعات رزرو فعلی خود، "تغییر رزرو" را فشار دهید.</li>
+                    <li>هنگامی که مجدداً وارد سایت شوید، اطلاعات مربوط به رزرو شما قابل مشاهده خواهد بود.</li>
+                    <li>اگر خودرو را زودتر از موعد از شارژ جدا کردید، می‌توانید رزرو خود را متوقف کنید. به این ترتیب دیگر کاربران متوجه خواهند شد که جایگاه شما خالی است. اگر این کار را نکنید، رزرو به صورت خودکار در زمان تعیین‌شده حذف خواهد شد.</li>
+                    <li>اگر همه جایگاه‌ها پر باشند، در صفحه اول می‌توانید سه جایگاهی که زودتر از بقیه خالی می‌شوند را مشاهده کنید.</li>
                 </ol>
-                <p class="card-text">این اپلیکیشن در مرحله آزمایشی است و بهبود خواهد یافت. اگر متوجه شدید که اپلیکیشن به درستی کار نمی‌کند، لطفاً به من به شماره <a href="tel:8188134957" class="text-light">8188134957</a> یا هر اطلاعات تماس دیگری در وب سایت من اطلاع دهید. در حال حاضر، توسعه دهنده این اپلیکیشن به دنبال یک شغل به عنوان توسعه دهنده پایتون است. اگر پیشنهاد شغلی دارید، وب سایت من: <a href="http://zheliabovskii.info" class="text-light">zheliabovskii.info</a>.</p>
+
+                <p class="card-text">این برنامه در مرحله آزمایش است و بهبود خواهد یافت. اگر مشکلاتی مشاهده کردید، لطفاً از طریق تلفن <a href="tel:8188134957" class="text-light">8188134957</a> یا هر اطلاعات تماس دیگری که در وب‌سایت من موجود است، با من تماس بگیرید. همچنین، توسعه‌دهنده این برنامه در حال جستجوی شغلی در موقعیت توسعه‌دهنده پایتون است. اگر پیشنهادی دارید، وب‌سایت من: <a href="http://zheliabovskii.info" class="text-light">zheliabovskii.info</a>.</p>
+
                 <div class="btn-container">
-                    <a href="/" class="btn btn-success" style="background-color: #28a745; border-color: #28a745;">من قوانین را می‌پذیرم</a>
-                    <a href="http://zheliabovskii.info" class="btn btn-info" style="background-color: #17a2b8; border-color: #17a2b8;">درباره توسعه دهنده</a>
+                    <a href="/" class="btn btn-success">من قوانین را می‌پذیرم</a>
+                    <a href="http://zheliabovskii.info" class="btn btn-info">درباره برنامه نویس</a>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

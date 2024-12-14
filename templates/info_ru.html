@@ -1,20 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charging Station App Rules</title>
+    <title>Правила приложения зарядной станции</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #343a40;
-            color: #ffffff;
+            background: linear-gradient(135deg, #1e2026, #292c35);
+            color: #e2e2e2;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
             margin-top: 2rem;
+        }
+
+        .language-buttons a {
+            margin-right: 5px;
+        }
+
+        .card {
+            background: linear-gradient(90deg, #1e2126, #25292f);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #d1d5db;
+        }
+
+        .card-text a {
+            color: #17a2b8;
+            transition: color 0.3s ease;
+        }
+
+        .card-text a:hover {
+            color: #138496;
         }
 
         .btn-container {
@@ -23,8 +59,47 @@
             margin-top: 2rem;
         }
 
-        .language-buttons a {
-            margin-right: 5px;
+        .btn {
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 10px 25px;
+            border-radius: 30px;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #218838);
+            border: none;
+            color: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838, #1e7e34);
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            border: none;
+            color: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-info:hover {
+            background: linear-gradient(135deg, #117a8b, #0f718a);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .btn-container {
+                flex-direction: column;
+            }
+
+            .btn-container .btn {
+                margin-bottom: 10px;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -37,28 +112,31 @@
             <a href="/info/ru" class="btn btn-light btn-sm">РУ</a>
             <a href="/info/fa" class="btn btn-light btn-sm">فا</a>
         </div>
-        <div class="card bg-dark text-light">
+
+        <div class="card">
             <div class="card-body">
-                <h1 class="card-title text-center">Charging Station App Rules</h1>
-                <p class="card-text">Это приложение сделано специально чтобы облегчить жизнь всем кто пользуется зарядочными станциями в этом билдинге. Вот несколько правил, которые помогут нам максимально эффективно осуществлять эти функции.</p>
+                <h1 class="card-title text-center">Правила использования приложением Charger locker</h1>
+                <p class="card-text">Это приложение сделано специально, чтобы облегчить жизнь всем, кто пользуется зарядочными станциями в этом здании. Вот несколько правил, которые помогут нам максимально эффективно осуществлять эти функции.</p>
+
                 <ol class="card-text">
-                    <li>Как только нашли свободное место, отсканируйте QR code.</li>
+                    <li>Как только нашли свободное место, отсканируйте QR-код.</li>
+                    <li>Сохраните этот сайт на рабочий стол своего телефона. Нажмите <b>кнопку поделиться внизу экрана</b>, затем выберите "Add to Home Screen".</li>
                     <li>Найдите свой спот в списке свободных слотов (все слоты пронумерованы).</li>
-                    <li>Выберите время, на которое хотели бы забронировать спот. Обратите внимание, что если вы оставили машину на ночь на зарядке, то ваша бронь удаляется автоматически в 10AM.</li>
-                    <li>Теперь при повторном заходе на сайт, у вас будет видна информация о вашем бронировании.</li>
-                    <li>Если вы снимаете машину с зарядки раньше времени, вы можете отсканировать QR code еще раз и остановить бронирование. Тогда все остальные люди будут знать, что спот свободен.</li>
+                    <li>Если вам надо изменить бронирование, то на окне с информацией о вашем текущем бронировании нажмите "изменить бронирование".</li>
+                    <li>Теперь при повторном заходе на сайт у вас будет видна информация о вашем бронировании.</li>
+                    <li>Если вы снимаете машину с зарядки раньше времени, вы можете остановить бронирование. Тогда все остальные пользователи узнают, что спот свободен. Если вы этого не сделаете, бронирование удалится автоматически по наступлении обозначенного времени.</li>
+                    <li>Так же, если все споты заняты, в первом окне вы увидите три спота, которые освободятся раньше всех остальных.</li>
                 </ol>
-                <p class="card-text">Приложение находится на этапе тестирования и будет улучшаться. Если заметите некорректную работу приложения, пожалуйста, сообщите мне по номеру телефона <a href="tel:8188134957" class="text-light">8188134957</a> или по любой контактной информации на моем сайте. В данный момент разработчик данного приложения ищет работу на позицию Python Developer, если у вас есть какие-то предложения, мой сайт: <a href="http://zheliabovskii.info" class="text-light">zheliabovskii.info</a>.</p>
+
+                <p class="card-text">Приложение находится на этапе тестирования и будет улучшаться. Если заметите некорректную работу приложения, пожалуйста, сообщите мне по номеру телефона <a href="tel:8188134957" class="text-light">8188134957</a> или по любой контактной информации на моем сайте. В данный момент разработчик данного приложения ищет работу на позицию Python Developer. Если у вас есть предложение, мой сайт: <a href="http://zheliabovskii.info" class="text-light">zheliabovskii.info</a>.</p>
+
                 <div class="btn-container">
-                    <a href="/" class="btn btn-success" style="background-color: #28a745; border-color: #28a745;">Я ПРИНИМАЮ ПРАВИЛА</a>
-                    <a href="http://zheliabovskii.info" class="btn btn-info" style="background-color: #17a2b8; border-color: #17a2b8;">О Разработчике</a>
+                    <a href="/" class="btn btn-success">Я ПРИНИМАЮ ПРАВИЛА</a>
+                    <a href="http://zheliabovskii.info" class="btn btn-info">О Разработчике</a>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

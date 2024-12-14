@@ -9,6 +9,7 @@ def full_time_to_12_hour_format(datetime_str):
     return datetime_obj.strftime('%I:%M %p')
 
 
+
 class Database:
     _instance = None
 
@@ -24,6 +25,17 @@ class Database:
         self.cursor = self.connection.cursor()
         self.create_tables()
         self.connection.commit()
+        self.delete_old_sessions()
+        spots_created = 0
+        if spots_created == 0:
+            self.create_spots()
+            self.connection.commit()
+            spots_created += 1
+        else:
+            logger.debug("Spots already created")
+            pass
+
+    def create_spots(self):
         self.add_new_spots(1, 1, 1)
         self.add_new_spots(1, 1, 2)
         self.add_new_spots(1, 1, 3)
