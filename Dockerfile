@@ -9,6 +9,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-EXPOSE 4000
+EXPOSE 5432
 
 CMD ["python", "main.py"]
