@@ -1,0 +1,19 @@
+version: 1
+resources:
+  cpu: 1 vCPU
+  memory: 2 GB
+source:
+  image-repository:
+    image-identifier: docker.io/lebovskiiS/charger_locker:latest
+
+    image-configuration:
+      runtime-environment-variables:
+        PYTHONUNBUFFERED: "1"
+        ENV: production
+        DEBUG: "false"
+network:
+  port: 5432
+auto-deployments:
+  enabled: true
+health-check:
+  protocol: TCP
